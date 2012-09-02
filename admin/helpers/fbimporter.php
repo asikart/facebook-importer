@@ -20,13 +20,6 @@ class FbimporterHelper
 	 */
 	public static function addSubmenu($vName = '')
 	{
-
-		JSubMenuHelper::addEntry(
-			JText::_('JCATEGORY'),
-			'index.php?option=com_categories&extension=com_fbimporter',
-			$vName == 'categories'
-		);
-		
 		$folders = JFolder::folders(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_fbimporter'.DS.'views');
 		
 		foreach( $folders as $folder ){

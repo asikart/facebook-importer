@@ -20,27 +20,19 @@ $listDirn	= $this->state->get('list.direction');
 $canOrder	= $user->authorise('core.edit.state', 'com_fbimporter');
 $saveOrder	= $listOrder == 'a.ordering';
 ?>
-
-<form action="<?php echo JRoute::_('index.php?option=com_fbimporter&view=items'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_fbimporter&view=fbs'); ?>" method="post" name="adminForm" id="adminForm">
 	<fieldset id="filter-bar">
 		<div class="filter-search fltlft">
-			<?php 
-				foreach($this->filter['search']->getFieldset('search') as $search ):
-					echo $search->label ;
-					echo ' ' ;
-					echo $search->input ;
-				endforeach;
-			?>
-			<button type="submit"><?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?></button>
-			<button type="button" onclick="document.id('search_index').value='';this.form.submit();"><?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?></button>
+			<label class="import-num-lbl" for="import_num">快取數量(預設50)</label>
+			<input type="text" id="import_num" name="import_num" value="<?php echo $this->state->get('import_num'); ?>" />
 		</div>
-		<div class="filter-select fltrt">
- 			<?php 
-				foreach($this->filter['filter']->getFieldset('filter') as $filter ):
-					echo $filter->input ;
-				endforeach;
-			?>
-		</div>
+		
+		<!--<div class="filter-select fltrt">
+                <select name="filter_published" class="inputbox" onchange="this.form.submit()">
+                    <option value=""><?php echo JText::_('JOPTION_SELECT_PUBLISHED');?></option>
+                    <?php echo JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), "value", "text", $this->state->get('filter.state'), true);?>
+                </select>
+		</div>-->
 	</fieldset>
 	<div class="clr"> </div>
 
@@ -50,119 +42,73 @@ $saveOrder	= $listOrder == 'a.ordering';
 				<th width="1%">
 					<input type="checkbox" name="checkall-toggle" value="" onclick="checkAll(this)" />
 				</th>
-				
-				<th>
-					<?php echo JHtml::_('grid.sort',  'JGLOBAL_TITLE', 'a.title', $listDirn, $listOrder); ?>
-				</th>
-				
-				<th width="5%">
-					<?php echo JHtml::_('grid.sort',  'JPUBLISHED', 'a.published', $listDirn, $listOrder); ?>
-				</th>
-				
-				<th width="10%">
-					<?php echo JHtml::_('grid.sort',  'JGRID_HEADING_ORDERING', 'a.ordering', $listDirn, $listOrder); ?>
-					<?php if ($canOrder && $saveOrder) :?>
-						<?php echo JHtml::_('grid.order',  $this->items, 'filesave.png', 'items.saveorder'); ?>
-					<?php endif; ?>
-				</th>
-				
-				<th width="5%">
-					<?php echo JHtml::_('grid.sort',  'JCATEGORY', 'b.title', $listDirn, $listOrder); ?>
-				</th>
-				
-				<th width="5%">
-					<?php echo JHtml::_('grid.sort',  'JGRID_HEADING_ACCESS', 'd.title', $listDirn, $listOrder); ?>
-				</th>
-				
-				<th width="10%">
-					<?php echo JHtml::_('grid.sort',  'JGRID_HEADING_CREATED_BY', 'c.name', $listDirn, $listOrder); ?>
-				</th>
-				
-				<th width="5%">
-					<?php echo JHtml::_('grid.sort',  'JGRID_HEADING_LANGUAGE', 'e.title', $listDirn, $listOrder); ?>
-				</th>
-				
-                <th width="1%" class="nowrap">
-                    <?php echo JHtml::_('grid.sort',  'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
-                </th>
-
+				<th width="3%">圖片</th>
+				<th width="8%">時間</th>
+				<th width="14%">分類</th>
+				<th width="20%">標題</th>
+				<th>敘述</th>
 			</tr>
 		</thead>
 		<tfoot>
 			<tr>
 				<td colspan="10">
-					<?php echo $this->pagination->getListFooter(); ?>
+					<?php //echo $this->pagination->getListFooter(); ?>
 				</td>
 			</tr>
 		</tfoot>
 		<tbody>
-		<?php foreach ($this->items as $i => $item) :
-			$ordering	= ($listOrder == 'a.ordering');
-			$canCreate	= $user->authorise('core.create',		'com_fbimporter');
-			$canEdit	= $user->authorise('core.edit',			'com_fbimporter');
-			$canCheckin	= $user->authorise('core.manage',		'com_fbimporter');
-			$canChange	= $user->authorise('core.edit.state',	'com_fbimporter');
+		<?php
+		$db = JFactory::getDbo();
+		$q = $db->getQuery(true) ;
+		$params = $this->state->get('params') ;
+		
+		foreach ($this->items as $i => $item ) :
+			if( $item->continue ) continue ;
 			?>
 			<tr class="row<?php echo $i % 2; ?>">
 				<td class="center">
-					<?php echo JHtml::_('grid.id', $i, $item->a_id); ?>
+					<input type="checkbox" id="cb<?php echo $i; ?>" name="cid[<?php echo $item->likes->count; ?>]" value="<?php echo $item->id; ?>" onclick="Joomla.isChecked(this.checked);" title="行 <?php echo $i + 1 ; ?> 的勾選盒" />
 				</td>
-				
-				<td>
-					<a href="<?php echo JRoute::_('index.php?option=com_fbimporter&task=item.edit&id='.$item->a_id); ?>">
-						<?php echo $item->a_title; ?>
-					</a>
-					<p class="smallsub">
-						<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->a_alias));?>
-					</p>
-				</td>
-				
 				<td class="center">
-					<?php echo JHtml::_('jgrid.published', $item->a_published, $i, 'items.', $canChange, 'cb', $item->a_publish_up, $item->a_publish_down); ?>
+					<img src="<?php echo $item->picture; ?>" onerror="this.src='<?php echo JURI::root(); ?>plugins/system/asikart_easyset/lib/timthumb.php?w=150&h=150&zc=1&q=85&src=aHR0cDovL2Nkbi5hbmltYXBwLnR3L2ltZ3MvdGh1bWJzL2RlZmF1bHRfaW1nLnBuZw==';" alt="<?php echo $item->title; ?>" />
 				</td>
-				
-				<td class="order">
-					<?php if ($canChange) : ?>
-						<?php if ($saveOrder) :?>
-							<?php if ($listDirn == 'asc') : ?>
-								<span><?php echo $this->pagination->orderUpIcon($i, true, 'items.orderup', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-								<span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total, true, 'items.orderdown', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
-							<?php elseif ($listDirn == 'desc') : ?>
-								<span><?php echo $this->pagination->orderUpIcon($i, true, 'items.orderdown', 'JLIB_HTML_MOVE_UP', $ordering); ?></span>
-								<span><?php echo $this->pagination->orderDownIcon($i, $this->pagination->total, true, 'items.orderup', 'JLIB_HTML_MOVE_DOWN', $ordering); ?></span>
-							<?php endif; ?>
-						<?php endif; ?>
-						<?php $disabled = $saveOrder ?  '' : 'disabled="disabled"'; ?>
-						<input type="text" name="order[]" size="5" value="<?php echo $item->a_ordering;?>" <?php echo $disabled ?> class="text-area-order" />
-					<?php else : ?>
-						<?php echo $item->a_ordering; ?>
+				<td class="center">
+					<?php echo $item->date->format('Y-m-d') ; ?>
+					<br />
+					<?php echo $item->date->format('H:i:s') ; ?>
+					(<?php echo $item->date->format('D'); ?>)
+				</td>
+				<td align="center">
+					<?php if( $item->catid && !$params->get('select_category_when_exists', 1) ): ?>
+						<?php echo $item->cat_name; ?>
+						<input type="hidden" name="item[<?php echo $item->id; ?>][catid]" 	value="<?php echo $item->catid; ?>" />
+					<?php else: ?>
+						<?php echo JHtml::_('list.category', "item[{$item->id}][catid]", 'com_content', $item->catid); ?>
 					<?php endif; ?>
 				</td>
-				
-				<td class="center">
-					<?php echo $item->b_title; ?>
+				<td>
+					<?php if( $item->exists ): ?>
+					<span style="color:#C00;">(已匯入動畫分享)</span>
+					<?php endif; ?>
+					<br />
+					<a target="_blank" href="http://www.facebook.com/<?php echo $params->get('fb_uid'); ?>/posts/<?php echo $item->id; ?>"><?php echo $item->title; ?></a>
+					
 				</td>
-				
-				<td class="center">
-					<?php echo $item->d_title; ?>
+				<td>
+					<textarea name="item[<?php echo $item->id; ?>][message]" style="width:100%;height:100px;"><?php
+						$item->message = str_replace( '<br />' , '' , $item->message ) ;
+						//$item->message = str_replace( "\t" , '1' , $item->message ) ;
+						echo trim($item->message) ;
+					?></textarea>
+					<input type="hidden" name="item[<?php echo $item->id; ?>][title]" 	value="<?php echo $item->get('title'); ?>" />
+					<input type="hidden" name="item[<?php echo $item->id; ?>][type]" 	value="<?php echo $item->get('type'); ?>" />
+					<input type="hidden" name="item[<?php echo $item->id; ?>][name]" 	value="<?php echo $item->get('name'); ?>" />
+					<input type="hidden" name="item[<?php echo $item->id; ?>][picture]" value="<?php echo base64_encode($item->get('picture')); ?>" />
+					<input type="hidden" name="item[<?php echo $item->id; ?>][link]" 	value="<?php echo base64_encode($item->get('link')); ?>" />
+					<input type="hidden" name="item[<?php echo $item->id; ?>][source]" 	value="<?php echo base64_encode($item->get('source')); ?>" />
+					<input type="hidden" name="item[<?php echo $item->id; ?>][likes]" 	value="<?php echo $item->get('likes')->count; ?>" />
+					<input type="hidden" name="item[<?php echo $item->id; ?>][created]" value="<?php echo $item->get('created_time'); ?>" />
 				</td>
-				
-				<td class="center">
-					<?php echo $item->c_name; ?>
-				</td>
-				
-				<td class="center">
-					<?php if ($item->a_language=='*'):?>
-						<?php echo JText::alt('JALL', 'language'); ?>
-					<?php else:?>
-						<?php echo $item->e_title ? $this->escape($item->e_title) : JText::_('JUNDEFINED'); ?>
-					<?php endif;?>
-				</td>
-
-				<td class="center">
-					<?php echo (int) $item->a_id; ?>
-				</td>
-   
 			</tr>
 			<?php endforeach; ?>
 		</tbody>

@@ -29,22 +29,15 @@ class FbimporterModelItems extends JModelList
         if (empty($config['filter_fields'])) {
             $config['filter_fields'] = array(
                 'filter_order_Dir', 'filter_order', 
-				'search' , 'filter'
+				'search' , 'filter',
+				'import_num'
             );
-            
-        $config['tables'] = array(
-				'#__fbimporter_items',
-				'#__categories',
-				'#__users',
-				'#__viewlevels',
-				'#__languages'
-			);
-            
-            $config['filter_fields'] = FbimporterHelper::_('db.mergeFilterFields', $config['filter_fields'] , $config['tables'] );
-        }
+		}
 		
 		$this->config = $config ;
-
+		
+		$this->temp = JPATH_CACHE.'/fb-importer-temp' ;
+		
         parent::__construct($config);
     }
 
@@ -117,48 +110,139 @@ class FbimporterModelItems extends JModelList
 		return $form;
 	}
 	
-
-	/**
-	 * Build an SQL query to load the list data.
-	 *
-	 * @return	JDatabaseQuery
-	 * @since	1.6
+	/*
+	 * function getItems
+	 * @param $pks
 	 */
-	protected function getListQuery()
-	{
-		// Create a new query object.
-		$db		= $this->getDbo();
-		$q		= $db->getQuery(true);
-		$order 	= $this->getState('list.ordering' , 'a.id');
-		$dir	= $this->getState('list.direction', 'asc');
-
-		// Filter and Search
-		$filter = $this->getState('filter',array()) ;
-		$search = $this->getState('search') ;
+	
+	public function getItems() {
 		
-		if($search['index']){
-			$q->where("{$search['field']} LIKE '%{$search['index']}%'");
+		$db = JFactory::getDbo() ;
+		$q = $db->getQuery(true) ;
+		$params = $this->getState('params');
+		
+		$temp = $this->temp ;
+		$date = JFactory::getDate( 'now' , JFactory::getConfig()->get('offset') ) ;
+		
+		if( JFile::exists($temp) )
+			$r = JFile::read( $temp ) ;
+		$r = json_decode($r) ;
+		
+		if( isset($r->data) ){
+			
+			foreach( $r->data as &$item ):
+				$item = new JObject($item);
+				$item->continue = false ;
+				
+				if( !isset($item->message) ){
+					$item->continue = true ;
+					continue ;
+				}
+				
+				// set title
+				$item->message = nl2br($item->message);
+				$item->message = explode( '<br />' , $item->message );
+				$item->title   = $title = array_shift($item->message);
+				
+				// set message and id
+				$item->message = implode( '<br />' , $item->message );
+				$item->id = explode( '_' , $item->id );
+				$item->id = $item->id[1] ;
+				
+				// set category
+				$escape = "[]{}()$^.*?-=+&%#!" ;
+				
+				$lft 	= $params->get('category_match_left');
+				$rgt	= $params->get('category_match_right');
+				
+				if( strpos( $escape ,$lft) !== false ){
+					$lft = '\\'.$lft ;
+				}
+				
+				if( strpos( $escape ,$rgt ) !== false ){
+					$rgt = '\\'.$rgt ;
+				}
+				
+				$regex 	= "/{$lft}(.*){$rgt}(.*)/" ;
+				preg_match( $regex, trim($title), $matches ); // get cat name
+				
+				$item->catid = null ;
+				
+				if(isset($matches[1]) && $matches[2]){
+					$category_name 	= $matches[1] ;
+					
+					$q->select('id')
+						->from('#__categories')
+						->where("title='{$category_name}'")
+						->where("extension='com_content'")
+						;
+					$db->setQuery($q);
+					$result = $db->loadResult();
+					
+					if($result){
+						$item->catid 	= $result ;
+						$item->title 	= $matches[2] ;
+						$item->cat_name = $category_name ;
+					}
+					
+				}else{
+					// if not match, continue
+					if($params->get('category_not_match_continue'))
+						$item->continue = true ;
+				}
+				
+				// get date
+				$item->date 	= JFactory::getDate( $item->created_time , JFactory::getConfig()->get('offset') );
+				$item->alias 	= JFilterOutput::stringURLSafe($title . ' ' . $date->format('Y-m-d') ) ;
+				$q->select('id')
+					->from('#__content')
+					->where("alias = '{$item->alias}'")
+					;
+				$db->setQuery($q);
+				$itemid = $db->loadResult();
+				$q->clear();
+				$item->exists = $itemid ;
+			endforeach;
+			
+			
+			
+			
+			
+			return $r->data ;
+		}else{
+			return array();
 		}
+	}
+	
+	/*
+	 * function refresh
+	 * @param $arg
+	 */
+	
+	public function refresh() {
+		JLoader::import( 'includes.facebook.facebook' , FBIMPORTER_ADMIN ) ;
 		
-		foreach($filter as $k => $v ){
-			if($v !== '*')
-				$q->where("{$k}='{$v}'") ;
-		}
-		// Filter and search
+		$nowTime = JFactory::getDate( 'now' , JFactory::getConfig()->get('offset') )->toUnix(true) ;
+		$fromTime = JFactory::getDate( '2012-03-25' , JFactory::getConfig()->get('offset') )->toUnix() ;
+		$temp = $this->temp ;
 		
-		// get select columns
-		$select = FbimporterHelper::_( 'db.getSelectList', $this->config['tables'] );
+		$config = array();
+		$config['appId'] = '107194579397450';
+		$config['secret'] = 'dacbe9c28ad4e1fa08f12a6c110bb6d2';
 		
-		//build query
-		$q->select($select)
-			->from('#__fbimporter_items AS a')
-			->leftJoin('#__categories 	AS b ON a.catid = b.id')
-			->leftJoin('#__users 		AS c ON a.created_by = c.id')
-			->leftJoin('#__viewlevels 	AS d ON a.access = d.id')
-			->leftJoin('#__languages 	AS e ON a.language = e.lang_code')
-			//->where("")
-			->order( " {$order} {$dir}" ) ;
+		$fb = new Facebook($config);
+		//$user = $fb->api('/animapp') ;
 		
-		return $q;
+		
+		$limit = $this->getState( 'import_num' , 10 );
+		
+		$params = $this->getState('params');
+		$uid = $params->get('fb_uid');
+		
+		$r = $fb->api("/{$uid}/posts?limit=" . $limit );
+		
+		JPath::setPermissions( $temp );
+		JFile::write( $temp , json_encode($r) );
+		JFile::write( $temp.'X.txt' , print_r($r, 1) );
 	}
 }

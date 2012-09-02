@@ -5,14 +5,63 @@
 		description="COM_FBIMPORTER_COMPONENT_DESC"
 	>
 
-        <field name="test"
+        <field name="fb_uid"
+             type="text"
+             default=""
+             label="Facebook uid"
+             description="粉絲頁或人物的id"
+        />
+		
+		<field name="first_line_to_title"
              type="radio"
              default="1"
-             label="COM_FBIMPORTER_TEST_LABEL"
-             description="COM_FBIMPORTER_TEST_DESC">
-                 <option value="0">JHIDE</option>
-                 <option value="1">JSHOW</option>
-         </field>
+             label="第一行擷取為標題"
+             description="將第一行轉換成文章標題"
+        >
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
+		<field name="title_max_char"
+             type="text"
+             default="50"
+             label="最大標題字數"
+             description="如果第一行的長度太多，將會截斷"
+        />
+		
+		<field name="category_match_left"
+             type="text"
+             default="["
+             label="擷取分類的左括號"
+             description="以此作為擷取分類名稱的正規表示式字串"
+        />
+		
+		<field name="category_match_right"
+             type="text"
+             default="]"
+             label="擷取分類的右括號"
+             description="以此作為擷取分類名稱的正規表示式字串"
+        />
+		
+		<field name="category_not_match_continue"
+             type="radio"
+             default="0"
+             label="不匹配格式就跳過"
+             description="當格式不符合標題定義的分類格式時，就略過此項目。"
+        >
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
+		<field name="select_category_when_exists"
+             type="radio"
+             default="0"
+             label="分類匹配成功時依舊可選"
+             description="當分類存在且匹配成功，是否還讓使正者可以自行選擇分類。"
+        >
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
 
 	</fieldset>
 
