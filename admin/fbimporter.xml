@@ -1,32 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="2.5.0" method="upgrade">
-	<name>fbimporter</name>
-	<creationDate>2012-02-28</creationDate>
+	<name>com_fbimporter</name>
+	<creationDate>2012-09-01</creationDate>
 	<copyright>Copyright (C) 2012. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <author>Asika</author>
 	<authorEmail>asika32764@gmail.com</authorEmail>
 	<authorUrl>http://asikart.com</authorUrl>
 	<version>1.0.0</version>
-	<description>desc of fbimporter</description>
+	<description>Asikart Facebook 匯入工具</description>
 
-	<files folder="site">
-		<filename>index.html</filename>
-		<filename>fbimporter.php</filename>
-		<filename>controller.php</filename>
-		<filename>router.php</filename>
-		<folder>languages</folder>
-		<folder>views</folder>
-		<folder>models</folder>
-		<folder>controllers</folder>
-		<folder>helpers</folder>
-	</files>
 	<administration>
-		<menu>COM_FBIMPORTER</menu>
-		<submenu>
-			<menu link="option=com_fbimporter&amp;view=items" view="items" img="class:items" alt="Fbimporter/Items">COM_FBIMPORTER_ITEMS</menu>
+		<menu img="class:langmanager">COM_FBIMPORTER</menu>
 
-        </submenu>
 		<files folder="administrator">
 			<filename>access.xml</filename>
 			<filename>config.xml</filename>
@@ -40,6 +26,8 @@
 			<folder>tables</folder>
 			<folder>views</folder>
 			<folder>languages</folder>
+			<folder>class</folder>
+			<folder>includes</folder>
 		</files>
 	</administration>
 </extension>
