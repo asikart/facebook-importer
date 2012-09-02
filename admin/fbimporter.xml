@@ -16,6 +16,12 @@
   		</sql>
     </install>
 	
+	<uninstall> <!-- Runs on uninstall -->
+    	<sql>
+        	<file driver="mysql" charset="utf8">sql/uninstall.sql</file>
+  		</sql>
+    </uninstall>
+	
 	<administration>
 		<menu img="components/com_fbimporter/images/ak-fbimporter-logo-16.png">COM_FBIMPORTER</menu>
 

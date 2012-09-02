@@ -242,7 +242,7 @@ class FbimporterModelItems extends JModelList
 		$limit = $this->getState( 'import_num' , 50 );
 		
 		$params = $this->getState('params');
-		$uid = $params->get('fb_uid');
+		$uid = $params->get('fb_uid', 'facebook');
 		
 		$r = $fb->api("/{$uid}/posts?limit=" . $limit );
 		
