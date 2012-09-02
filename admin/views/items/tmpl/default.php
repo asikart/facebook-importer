@@ -72,7 +72,7 @@ $saveOrder	= $listOrder == 'a.ordering';
 					<input type="checkbox" id="cb<?php echo $i; ?>" name="cid[<?php echo $item->likes->count; ?>]" value="<?php echo $item->id; ?>" onclick="Joomla.isChecked(this.checked);" title="行 <?php echo $i + 1 ; ?> 的勾選盒" />
 				</td>
 				<td class="center">
-					<img src="<?php echo $item->picture; ?>" onerror="this.src='<?php echo JURI::root(); ?>plugins/system/asikart_easyset/lib/timthumb.php?w=150&h=150&zc=1&q=85&src=aHR0cDovL2Nkbi5hbmltYXBwLnR3L2ltZ3MvdGh1bWJzL2RlZmF1bHRfaW1nLnBuZw==';" alt="<?php echo $item->title; ?>" />
+					<img src="<?php echo $item->get('picture', 'components/com_fbimporter/images/facebook-default.png'); ?>" width="150" onerror="this.src='components/com_fbimporter/images/facebook-default.png';" alt="<?php echo $item->get('title'); ?>" />
 				</td>
 				<td class="center">
 					<?php echo $item->date->format('Y-m-d') ; ?>

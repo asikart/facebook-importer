@@ -95,7 +95,7 @@ class FbimporterModelitem extends JModel
 			// set replaces
 			$replace['{TITLE}'] 		= $item['title'] ;
 			$replace['{VIDEO}'] 		= $vid ? "{{$platform}}$vid{/{$platform}}" : $vid ;
-			$replace['{INTRO_MESSAGE}'] 	= $this->addLink( $intro ) ;
+			$replace['{INTRO_MESSAGE}'] = $this->addLink( $intro ) ;
 			$replace['{IMAGE}']			= $image ;
 			$replace['{FULL_MESSAGE}'] 	= $this->addLink( $full ) ;
 			$replace['{READMORE_LINK}'] = "http://www.facebook.com/animapp/posts/$id" ;

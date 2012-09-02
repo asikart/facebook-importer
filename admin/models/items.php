@@ -229,9 +229,11 @@ class FbimporterModelItems extends JModelList
 		$fromTime = JFactory::getDate( '2012-03-25' , JFactory::getConfig()->get('offset') )->toUnix() ;
 		$temp = $this->temp ;
 		
+		$params = $this->getState('params');
+		
 		$config = array();
-		$config['appId'] = '107194579397450';
-		$config['secret'] = 'dacbe9c28ad4e1fa08f12a6c110bb6d2';
+		$config['appId'] =  $params->get( 'app_id', '420381114686923');
+		$config['secret'] = $params->get( 'secret', 'e5fcb4294864136013ae747090b07778');
 		
 		$fb = new Facebook($config);
 		//$user = $fb->api('/animapp') ;

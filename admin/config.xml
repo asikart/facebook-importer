@@ -85,7 +85,25 @@
         />
 
 	</fieldset>
-
+	
+	<fieldset name="FB_CONNECT" label="Facebook 連結">
+		<field name="app_id"
+             type="text"
+             default=""
+             label="App ID"
+             description="可填入自己的 Facebook APP ID ，若不填則使用系統預設的APP"
+			 size="40"
+        />
+		
+		<field name="app_secret"
+             type="text"
+             default=""
+             label="APP Secret"
+             description="可填入自己的 Facebook APP Secret ，若不填則使用系統預設的 APP Sceret"
+			 size="40"
+        />
+	</fieldset>
+	
 	<fieldset name="permissions"
 		description="JCONFIG_PERMISSIONS_DESC"
 		label="JCONFIG_PERMISSIONS_LABEL"
