@@ -9,7 +9,13 @@
 	<authorUrl>http://asikart.com</authorUrl>
 	<version>1.0.0</version>
 	<description>Asikart Facebook 匯入工具</description>
-
+	
+	<install> <!-- Runs on install -->
+    	<sql>
+        	<file driver="mysql" charset="utf8">sql/install.sql</file>
+  		</sql>
+    </install>
+	
 	<administration>
 		<menu img="class:langmanager">COM_FBIMPORTER</menu>
 
