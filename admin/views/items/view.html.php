@@ -51,7 +51,10 @@ class FbimporterViewItems extends JView
 		$state	= $this->get('State');
 		$canDo	= FbimporterHelper::getActions($state->get('filter.category_id'));
 
-		JToolBarHelper::title('Asikart Facebook 匯入工具', 'langmanager.png');
+		JToolBarHelper::title('Asikart Facebook 匯入工具', 'fbimporter.png');
+		
+		$doc = JFactory::getDocument();
+		$doc->addStyleDeclaration( ' .icon-48-fbimporter { background-image: url(components/com_fbimporter/images/ak-fbimporter-logo-48.png) ; } ' );
 
         //Check if the form exists before showing the add/edit buttons
        

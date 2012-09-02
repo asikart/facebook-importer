@@ -17,7 +17,7 @@
     </install>
 	
 	<administration>
-		<menu img="class:langmanager">COM_FBIMPORTER</menu>
+		<menu img="components/com_fbimporter/images/ak-fbimporter-logo-16.png">COM_FBIMPORTER</menu>
 
 		<files folder="administrator">
 			<filename>access.xml</filename>
@@ -27,6 +27,7 @@
 			<filename>fbimporter.php</filename>
 			<folder>controllers</folder>
 			<folder>helpers</folder>
+			<folder>images</folder>
 			<folder>models</folder>
 			<folder>sql</folder>
 			<folder>tables</folder>
@@ -36,5 +37,9 @@
 			<folder>includes</folder>
 		</files>
 	</administration>
+	
+	<updateservers>
+        <server type="extension" priority="1" name="Asikart Facebook Importer">http://asikart.com/update/com_fbimporter.xml</server>
+    </updateservers>
 </extension>
 

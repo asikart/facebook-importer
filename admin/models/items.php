@@ -124,6 +124,8 @@ class FbimporterModelItems extends JModelList
 		$temp = $this->temp ;
 		$date = JFactory::getDate( 'now' , JFactory::getConfig()->get('offset') ) ;
 		
+		$r = '' ;
+		
 		if( JFile::exists($temp) )
 			$r = JFile::read( $temp ) ;
 		$r = json_decode($r) ;
