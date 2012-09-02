@@ -42,6 +42,8 @@ class JFormFieldFormat extends JFormFieldList
 		$db->setQuery($q);
 		$formats = $db->loadObjectList();
 		
+		$formats = $formats ? $formats : array() ;
+		
 		foreach( $formats as $format ):
 			$options[] = JHtml::_('select.option', $format->id, $format->title );
 		endforeach;
