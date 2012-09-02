@@ -8,7 +8,7 @@
 
         <field name="fb_uid"
              type="text"
-             default=""
+             default="facebook"
              label="Facebook uid"
              description="粉絲頁或人物的id"
         />
