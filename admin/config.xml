@@ -60,7 +60,7 @@
 		
 		<field name="select_category_when_exists"
              type="radio"
-             default="0"
+             default="1"
              label="分類擷取成功時依舊可選分類"
              description="當分類存在且匹配成功，是否還讓使用者可以手動選擇分類。"
         >
