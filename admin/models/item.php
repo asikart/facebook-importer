@@ -15,7 +15,7 @@ jimport('joomla.application.component.modeladmin');
 /**
  * Fbimporter model.
  */
-class FbimporterModelitem extends JModelAdmin
+class FbimporterModelitem extends JModel
 {
 	/**
 	 * @var		string	The prefix to use with controller messages.
@@ -37,110 +37,132 @@ class FbimporterModelitem extends JModelAdmin
 	{
 		return parent::getTable( $type , $prefix , $config );
 	}
-
-	/**
-	 * Method to get the record form.
-	 *
-	 * @param	array	$data		An optional array of data for the form to interogate.
-	 * @param	boolean	$loadData	True if the form is to load its own data (default case), false if not.
-	 * @return	JForm	A JForm object on success, false on failure
-	 * @since	1.6
+	
+	/*
+	 * function saveAsShare
+	 * @param $
 	 */
-	public function getForm($data = array(), $loadData = true)
-	{
-		// Initialise variables.
-		$app	= JFactory::getApplication();
-
-		// Get the form.
-		$form = $this->loadForm('com_fbimporter.item', 'item', array('control' => 'jform', 'load_data' => $loadData));
-		if (empty($form)) {
-			return false;
-		}
-
-		return $form;
-	}
-
-	/**
-	 * Method to get the data that should be injected in the form.
-	 *
-	 * @return	mixed	The data for the form.
-	 * @since	1.6
-	 */
-	protected function loadFormData()
-	{
-		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_fbimporter.edit.item.data', array());
-
-		if (empty($data)) 
-		{
-			$data = $this->getItem();
-		}else{
-			$data = new JObject($data);
-		}
-
-		return $data;
-	}
-
-	/**
-	 * Method to get a single record.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
-	 * @since	1.6
-	 */
-	public function getItem($pk = null)
-	{
-		if ($item = parent::getItem($pk)) {
-
-			//Do any procesing on fields here if needed
-
-		}
-
-		return $item;
-	}
-
-	/**
-	 * Prepare and sanitise the table prior to saving.
-	 *
-	 * @since	1.6
-	 */
-	protected function prepareTable(&$table)
-	{
-		jimport('joomla.filter.output');
+	
+	public function saveAll() {
+		$items 	= JRequest::getVar('item') ;
+		$ids 	= JRequest::getVar('cid') ;
+		$table 	= JTable::getInstance('content') ;
+		$format = $this->getTable('format') ;
+		$this->params = JComponentHelper::getParams('com_fbimporter');
+		$sample = $this->params->get('format', 1) ;
 		
-		$date 	= JFactory::getDate( 'now' , JFactory::getConfig()->get('offset') ) ;
-		$user 	= JFactory::getUser() ;
-		$db 	= JFactory::getDbo();
+		$format->load($sample) ;
 		
-		// alias
-        if(!$table->alias) {
-			$table->alias = JFilterOutput::stringURLSafe( trim($table->title) ) ;
+		if(!$format){
+			$this->setError('無法讀取匯入格式，請在元件選項中選擇正確的格式設定。');
+			return false ;
+		}
+		
+		$sample_intro 	= $format->introtext ;
+		$sample_full 	= $format->fulltext ;
+		
+		foreach( $ids as $id ):
 			
-			if(!$table->alias){
-				$table->alias = JFilterOutput::stringURLSafe( $date->toMySQL() ) ;
-			}
-		}
+			// reset article
+			$table->id = null ;
+			$table->created 		= null ;
+			$table->publish_up 	= null ;
+			$table->publish_down 	= null ;
+			
+			// get item
+			$item = $items[$id] ;
+			
+			// video type
+			$link 		= base64_decode($item['link']) ; 
+			$r 			= $this->handleVideoType($link) ;
+			$platform 	= $r['platform'] ;
+			$vid 		= $r['vid'] ;
+			
+			// handel message
+			$message = nl2br($item['message']) ;
+			$message = str_replace( "\n" , '' , $message );
+			$message = str_replace( "\r" , '' , $message );
+			$message = explode( '<br /><br />' , $message );
+			$intro	 = array_shift($message) ;
+			$full    = implode( '<br /><br />' , $message);
+			
+			// handle image
+			$uri 	= JFactory::getURI( base64_decode($item['picture']) ) ;
+			$image 	= $uri->getVar('url');
+			$width	= $this->params->get('image_width', 550) ;
+			if($image) $image = '<img src="'.$image.'" alt="'.$item['title'].'" width="'.$width.'" />' ;
+			
+			// set replaces
+			$replace['{TITLE}'] 		= $item['title'] ;
+			$replace['{VIDEO}'] 		= $vid ? "{{$platform}}$vid{/{$platform}}" : $vid ;
+			$replace['{INTRO_MESSAGE}'] 	= $this->addLink( $intro ) ;
+			$replace['{IMAGE}']			= $image ;
+			$replace['{FULL_MESSAGE}'] 	= $this->addLink( $full ) ;
+			$replace['{READMORE_LINK}'] = "http://www.facebook.com/animapp/posts/$id" ;
+			$replace['{LINK_NAME}']		= $item['name'] ;
+			
+			// set article information
+			$date = JFactory::getDate( $item['created'] , JFactory::getConfig()->get('offset') ) ;
+			
+			$table->title	  = $item['title'] ;
+			$table->catid	  = $item['catid'] ? $item['catid'] : $format->catid ;
+			$table->introtext = strtr( $sample_intro , $replace ) ;
+			$table->fulltext  = strtr( $sample_full , $replace ) ;
+			$table->created	  = $date->toMySQL(true) ;
+			$table->alias 	  = JFilterOutput::stringURLSafe($table->title . ' ' . $date->format('Y-m-d-H-i-s', true) ) ;
+			$table->state	  = $format->published ;
+			$table->hits 	  = 0 ;
+			$table->created_by= JFactory::getUser()->get('id') ;
+			$table->language  = $format->language ;
+			
+			// save
+			$app = JFactory::getApplication();
+			
+			$app->triggerEvent('onContentBeforeSave', 'com_content.form', $table, true ) ;
+			$table->store();
+			$app->triggerEvent('onContentAfterSave', 'com_content.form', $table, true ) ;
+			
+		endforeach;
 		
-		// created date
-		if(!$table->created){
-			$table->created = $date->toMySQL();
-		}
-		
-		// created user
-		if(!$table->created_by){
-			$table->created_by = $user->get('id');
-		}
-		
-		// ordering
-		if (!$table->id) {
-			// Set ordering to the last item if not set
-			if (!$table->ordering) {
-				$db->setQuery('SELECT MAX(ordering) FROM #__fbimporter_items');
-				$max = $db->loadResult();
-				$table->ordering = $max+1;
-			}
-		}
+		return true ;
 	}
+	
+	
+	/*
+	 * function handleVideoType
+	 * @param $link
+	 */
+	
+	public function handleVideoType($link) {
+		
+		if( strpos( $link , 'youtube' ) ){
+			$platform = 'youtube' ;
+			$uri = JFactory::getURI( $link) ;
+			$vid = $uri->getVar('v') ;
+		}elseif( strpos( $link , 'vimeo' ) ){
+			$platform = 'vimeo' ;
+			$uri = JFactory::getURI($link) ;
+			$vid = $uri->getPath();
+			$vid = trim( $vid , '/' );
+		}else{
+			$platform = 'unknown' ;
+			$vid = null ;
+		}
+		
+		$r['platform'] = $platform ;
+		$r['vid'] = $vid ;
+		return $r ;
+	}
+	
+	/*
+	 * function addLink
+	 * @param $arg
+	 */
+	
+	function addLink($str) {
 
+		$str = preg_replace('#(http|https|ftp|telnet)://([0-9a-z\.\-]+)(:?[0-9]*)([0-9a-z\_\/\?\&\=\%\.\;\#\-\~\+]*)#i','<a href="\1://\2\3\4" target="_blank" >\1://\2\3\4</a>', $str);
+		
+		return $str;
+	}
 }

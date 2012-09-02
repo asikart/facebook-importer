@@ -15,7 +15,7 @@ jimport('joomla.application.component.view');
 /**
  * View class for a list of Fbimporter.
  */
-class FbimporterViewItems extends JView
+class FbimporterViewFormats extends JView
 {
 	protected $items;
 	protected $pagination;
@@ -28,7 +28,7 @@ class FbimporterViewItems extends JView
 	{
 		$this->state		= $this->get('State');
 		$this->items		= $this->get('Items');
-		//$this->pagination	= $this->get('Pagination');
+		$this->pagination	= $this->get('Pagination');
 		$this->filter		= $this->get('Filter');
 
 		// Check for errors.
@@ -51,20 +51,31 @@ class FbimporterViewItems extends JView
 		$state	= $this->get('State');
 		$canDo	= FbimporterHelper::getActions($state->get('filter.category_id'));
 
-		JToolBarHelper::title('Asikart Facebook 匯入工具', 'langmanager.png');
+		JToolBarHelper::title('匯入格式設定', 'article.png');
 
         //Check if the form exists before showing the add/edit buttons
-       
+        $formPath = JPATH_COMPONENT_ADMINISTRATOR.DS.'views'.DS.'format';
+        if (file_exists($formPath)) {
+            if ($canDo->get('core.create')) {
+			    JToolBarHelper::addNew('format.add','JTOOLBAR_NEW');
+		    }
 
-		if ($canDo->get('core.create')) {
-			JToolBarHelper::custom( 'item.saveAll' , 'new' , 'new' , '匯入' , true ) ;
-			//JToolBarHelper::custom( 'fb.saveAsWeekly' , 'publish' , 'publish' , '匯入至一週精選' , true ) ;
-			JToolBarHelper::divider();
-			JToolBarHelper::custom( 'items.refresh' , 'refresh' , 'refresh' , '刷新' , false);
+		    if ($canDo->get('core.edit')) {
+			    JToolBarHelper::editList('format.edit','JTOOLBAR_EDIT');
+			    JToolBarHelper::deleteList('你確定要刪除？', 'formats.delete');
+		    }
+        }
+
+		if ($canDo->get('core.edit.state')) {
+			    JToolBarHelper::divider();
+			    JToolBarHelper::publish('formats.publish', 'JTOOLBAR_ENABLE', true);
+				JToolBarHelper::unpublish('formats.unpublish', 'JTOOLBAR_DISABLE', true);
+            	JToolBarHelper::custom('formats.checkin', 'checkin.png', 'checkin_f2.png', 'JTOOLBAR_CHECKIN', true);
 		}
-		
+        
 		if ($canDo->get('core.admin')) {
 			JToolBarHelper::preferences('com_fbimporter');
 		}
+
 	}
 }

@@ -13,13 +13,13 @@ defined('_JEXEC') or die;
 jimport('joomla.application.component.controllerform');
 
 /**
- * Item controller class.
+ * Format controller class.
  */
-class FbimporterControllerItem extends JControllerForm
+class FbimporterControllerFormat extends JControllerForm
 {
 
     function __construct() {
-        $this->view_list = 'items';
+        $this->view_list = 'formats';
         parent::__construct();
     }
 	
@@ -27,27 +27,12 @@ class FbimporterControllerItem extends JControllerForm
 	 * Proxy for getModel.
 	 * @since	1.6
 	 */
-	public function getModel($name = 'Item', $prefix = 'FbimporterModel', $config = array('ignore_request' => true))
+	public function getModel($name = 'Format', $prefix = 'FbimporterModel', $config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);
 		return $model;
 	}
 	
-	/*
-	 * function add
-	 * @param $arg
-	 */
-	
-	public function saveAll() {
-		$model = $this->getModel() ;
-		if(!$model->saveAll()){
-			$msg = $model->getError();
-		}else{
-			$msg = '匯入成功' ;
-		}
-		
-		$this->setRedirect( 'index.php?option=com_fbimporter&view=items' , $msg );
-	}
 		
 	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'id')
 	{

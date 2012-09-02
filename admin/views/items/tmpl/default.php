@@ -12,7 +12,8 @@
 defined('_JEXEC') or die;
 
 JHtml::_('behavior.tooltip');
-JHTML::_('script','system/multiselect.js',false,true);
+JHtml::_('behavior.multiselect');
+
 $user	= JFactory::getUser();
 $userId	= $user->get('id');
 $listOrder	= $this->state->get('list.ordering');
@@ -20,11 +21,12 @@ $listDirn	= $this->state->get('list.direction');
 $canOrder	= $user->authorise('core.edit.state', 'com_fbimporter');
 $saveOrder	= $listOrder == 'a.ordering';
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_fbimporter&view=fbs'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_fbimporter&view=items'); ?>" method="post" name="adminForm" id="adminForm">
 	<fieldset id="filter-bar">
 		<div class="filter-search fltlft">
-			<label class="import-num-lbl" for="import_num">快取數量(預設50)</label>
-			<input type="text" id="import_num" name="import_num" value="<?php echo $this->state->get('import_num'); ?>" />
+			<label class="import-num-lbl" for="import_num">快取數量</label>
+			<?php echo JHtml::_('select.integerlist', 50, 1000, 50 , 'import_num', array('onchange'=>"Joomla.submitbutton('items.refresh')"), $this->state->get('import_num') ); ?>
+			
 		</div>
 		
 		<!--<div class="filter-select fltrt">
@@ -88,7 +90,7 @@ $saveOrder	= $listOrder == 'a.ordering';
 				</td>
 				<td>
 					<?php if( $item->exists ): ?>
-					<span style="color:#C00;">(已匯入動畫分享)</span>
+					<span style="color:#C00;">(已匯入)</span>
 					<?php endif; ?>
 					<br />
 					<a target="_blank" href="http://www.facebook.com/<?php echo $params->get('fb_uid'); ?>/posts/<?php echo $item->id; ?>"><?php echo $item->title; ?></a>

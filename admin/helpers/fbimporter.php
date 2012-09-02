@@ -20,17 +20,18 @@ class FbimporterHelper
 	 */
 	public static function addSubmenu($vName = '')
 	{
-		$folders = JFolder::folders(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_fbimporter'.DS.'views');
 		
-		foreach( $folders as $folder ){
-			if( substr($folder, -2) == 'is' || substr($folder, -1) == 's'){
-				JSubMenuHelper::addEntry(
-					JText::_('COM_FBIMPORTER_TITLE_'.strtoupper($folder)),
-					'index.php?option=com_fbimporter&view='.$folder,
-					$vName == $folder
-				);
-			}
-		}
+		JSubMenuHelper::addEntry(
+			'匯入工具',
+			'index.php?option=com_fbimporter&view=items',
+			$vName == 'items'
+		);
+		
+		JSubMenuHelper::addEntry(
+			'匯入格式設定',
+			'index.php?option=com_fbimporter&view=formats',
+			$vName == 'formats'
+		);
 
 	}
 

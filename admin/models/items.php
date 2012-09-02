@@ -181,7 +181,7 @@ class FbimporterModelItems extends JModelList
 					
 					if($result){
 						$item->catid 	= $result ;
-						$item->title 	= $matches[2] ;
+						$item->title 	= trim($matches[2]) ;
 						$item->cat_name = $category_name ;
 					}
 					
@@ -192,8 +192,9 @@ class FbimporterModelItems extends JModelList
 				}
 				
 				// get date
+				$q->clear();
 				$item->date 	= JFactory::getDate( $item->created_time , JFactory::getConfig()->get('offset') );
-				$item->alias 	= JFilterOutput::stringURLSafe($title . ' ' . $date->format('Y-m-d') ) ;
+				$item->alias 	= JFilterOutput::stringURLSafe($item->title . ' ' . $item->date->format('Y-m-d-H-i-s', true) ) ;
 				$q->select('id')
 					->from('#__content')
 					->where("alias = '{$item->alias}'")
@@ -234,7 +235,7 @@ class FbimporterModelItems extends JModelList
 		//$user = $fb->api('/animapp') ;
 		
 		
-		$limit = $this->getState( 'import_num' , 10 );
+		$limit = $this->getState( 'import_num' , 50 );
 		
 		$params = $this->getState('params');
 		$uid = $params->get('fb_uid');

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
 	<fieldset name="component"
-		label="COM_FBIMPORTER_COMPONENT_LABEL"
-		description="COM_FBIMPORTER_COMPONENT_DESC"
+		label="基本選項"
+		description=""
+		addfieldpath="administrator/components/com_fbimporter/models/fields"
 	>
 
         <field name="fb_uid"
@@ -11,6 +12,8 @@
              label="Facebook uid"
              description="粉絲頁或人物的id"
         />
+		
+		<field type="spacer" hr="true" />
 		
 		<field name="first_line_to_title"
              type="radio"
@@ -29,6 +32,8 @@
              description="如果第一行的長度太多，將會截斷"
         />
 		
+		
+		
 		<field name="category_match_left"
              type="text"
              default="["
@@ -46,7 +51,7 @@
 		<field name="category_not_match_continue"
              type="radio"
              default="0"
-             label="不匹配格式就跳過"
+             label="擷取不到分類就跳過"
              description="當格式不符合標題定義的分類格式時，就略過此項目。"
         >
 			<option value="0">JNO</option>
@@ -56,12 +61,28 @@
 		<field name="select_category_when_exists"
              type="radio"
              default="0"
-             label="分類匹配成功時依舊可選"
-             description="當分類存在且匹配成功，是否還讓使正者可以自行選擇分類。"
+             label="分類擷取成功時依舊可選分類"
+             description="當分類存在且匹配成功，是否還讓使用者可以手動選擇分類。"
         >
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>
+		
+		<field name="format"
+             type="format"
+             default="1"
+             label="選擇匯入格式"
+             description=""
+        />
+		
+		<field type="spacer" hr="true" />
+		
+		<field name="image_width"
+             type="text"
+             default="550"
+             label="圖片寬度"
+             description="避免圖片太寬破版"
+        />
 
 	</fieldset>
 
