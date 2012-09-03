@@ -63,55 +63,100 @@ $saveOrder	= $listOrder == 'a.ordering';
 		$db = JFactory::getDbo();
 		$q = $db->getQuery(true) ;
 		$params = $this->state->get('params') ;
+		$i = 0 ;
 		
-		foreach ($this->items as $i => $item ) :
+		JLoader::import( 'models.fields.format' , FBIMPORTER_ADMIN) ;
+		
+		foreach ($this->items as $item ) :
 			if( $item->continue ) continue ;
+			
+			// get format form
+			$format_form = new JFormFieldFormat() ;
+			$format_form->value = $params->get('format');
+			
+			$likes = isset($item->likes->count) ? $item->likes->count : 0;
 			?>
 			<tr class="row<?php echo $i % 2; ?>">
-				<td class="center">
-					<input type="checkbox" id="cb<?php echo $i; ?>" name="cid[<?php echo $item->likes->count; ?>]" value="<?php echo $item->id; ?>" onclick="Joomla.isChecked(this.checked);" title="行 <?php echo $i + 1 ; ?> 的勾選盒" />
+				<td class="center" style="padding: 0;">
+					<input style="width:100%; height:100%; <?php echo $item->exists ? 'visibility: hidden ;' : null; ?>" type="checkbox" id="cb<?php echo $i; ?>" <?php echo $item->exists ? 'disabled="true"' : null; ?>
+							name="cid[<?php echo $item->likes->count; ?>]" value="<?php echo $item->id; ?>" onclick="Joomla.isChecked(this.checked);" title="行 <?php echo $i + 1 ; ?> 的勾選盒" />
 				</td>
 				<td class="center">
-					<img src="<?php echo $item->get('picture', 'components/com_fbimporter/images/facebook-default.png'); ?>" width="150" onerror="this.src='components/com_fbimporter/images/facebook-default.png';" alt="<?php echo $item->get('title'); ?>" />
+					<a target="_blank" href="http://www.facebook.com/<?php echo $params->get('fb_uid'); ?>/posts/<?php echo $item->id; ?>">
+						<img src="<?php echo $item->get('picture', 'components/com_fbimporter/images/facebook-default.png'); ?>" width="150" onerror="this.src='components/com_fbimporter/images/facebook-default.png';" alt="<?php echo $item->get('title'); ?>" />
+					</a>
 				</td>
 				<td class="center">
-					<?php echo $item->date->format('Y-m-d') ; ?>
-					<br />
-					<?php echo $item->date->format('H:i:s') ; ?>
-					(<?php echo $item->date->format('D'); ?>)
+					<p>
+						<?php echo $item->date->format('Y-m-d') ; ?>
+						<br />
+						<?php echo $item->date->format('H:i:s') ; ?>
+						(<?php echo $item->date->format('D'); ?>)	
+					</p>
+					<p>
+						讚： <span style="color: blue;"><?php echo $likes; ?></span>
+						<br />
+						類型：<span style="color: red;"><?php echo $item->get('type'); ?></span>
+					</p>
+					<p>
+						<a target="_blank" href="http://www.facebook.com/<?php echo $params->get('fb_uid'); ?>/posts/<?php echo $item->id; ?>">[原始連結]</a>
+					</p>
 				</td>
-				<td align="center">
-					<?php if( $item->catid && !$params->get('select_category_when_exists', 1) ): ?>
-						<?php echo $item->cat_name; ?>
-						<input type="hidden" name="item[<?php echo $item->id; ?>][catid]" 	value="<?php echo $item->catid; ?>" />
+				<td align="">
+					<?php if( !$item->exists ): ?>
+						<?php if( $item->catid && !$params->get('select_category_when_exists', 1) ): ?>
+							<?php echo $item->cat_name; ?>
+							<input type="hidden" name="item[<?php echo $item->id; ?>][catid]" 	value="<?php echo $item->catid; ?>" />
+						<?php else: ?>
+							<?php
+							if(!$item->catid){
+								$item->catid = $params->get('catid') ;
+							}
+							echo JHtml::_('list.category', "item[{$item->id}][catid]", 'com_content', $item->catid);
+							?>
+						<?php endif; ?>
+						
+						<?php if( $params->get('can_select_format', 0) ): ?>
+							
+							<br />
+							<br /><hr />
+							選擇格式：
+							<?php
+							$format_form->name = "item[{$item->id}][format]" ;
+							echo $format_form->input ;
+							?>						
+						<?php endif; ?>
 					<?php else: ?>
-						<?php echo JHtml::_('list.category', "item[{$item->id}][catid]", 'com_content', $item->catid); ?>
+						<div align="center" style="color:#C00;">(已匯入)</div>
 					<?php endif; ?>
 				</td>
 				<td>
 					<?php if( $item->exists ): ?>
-					<span style="color:#C00;">(已匯入)</span>
+						<h3><?php echo $item->title; ?></h3>
+					<?php else: ?>
+						<textarea type="text" name="item[<?php echo $item->id; ?>][title]" style="width:100%;height:100px;"><?php echo $item->get('title'); ?></textarea>
 					<?php endif; ?>
-					<br />
-					<a target="_blank" href="http://www.facebook.com/<?php echo $params->get('fb_uid'); ?>/posts/<?php echo $item->id; ?>"><?php echo $item->title; ?></a>
-					
 				</td>
 				<td>
+					<?php if( !$item->exists ): ?>
 					<textarea name="item[<?php echo $item->id; ?>][message]" style="width:100%;height:100px;"><?php
 						$item->message = str_replace( '<br />' , '' , $item->message ) ;
 						//$item->message = str_replace( "\t" , '1' , $item->message ) ;
 						echo trim($item->message) ;
 					?></textarea>
-					<input type="hidden" name="item[<?php echo $item->id; ?>][title]" 	value="<?php echo $item->get('title'); ?>" />
+					<?php else: ?>
+						<?php echo trim($item->message); ?>
+					<?php endif; ?>
 					<input type="hidden" name="item[<?php echo $item->id; ?>][type]" 	value="<?php echo $item->get('type'); ?>" />
 					<input type="hidden" name="item[<?php echo $item->id; ?>][name]" 	value="<?php echo $item->get('name'); ?>" />
 					<input type="hidden" name="item[<?php echo $item->id; ?>][picture]" value="<?php echo base64_encode($item->get('picture')); ?>" />
 					<input type="hidden" name="item[<?php echo $item->id; ?>][link]" 	value="<?php echo base64_encode($item->get('link')); ?>" />
 					<input type="hidden" name="item[<?php echo $item->id; ?>][source]" 	value="<?php echo base64_encode($item->get('source')); ?>" />
-					<input type="hidden" name="item[<?php echo $item->id; ?>][likes]" 	value="<?php echo $item->get('likes')->count; ?>" />
+					<input type="hidden" name="item[<?php echo $item->id; ?>][likes]" 	value="<?php echo $likes; ?>" />
 					<input type="hidden" name="item[<?php echo $item->id; ?>][created]" value="<?php echo $item->get('created_time'); ?>" />
 				</td>
 			</tr>
+			<?php $i++; ?>
 			<?php endforeach; ?>
 		</tbody>
 	</table>

@@ -68,6 +68,15 @@
 			<option value="1">JYES</option>
 		</field>
 		
+		<field name="catid"
+             type="category"
+             label="預設分類"
+             description=""
+			 extension="com_content"
+        >
+			<option>- 以格式分類為預設值 -</option>
+		</field>
+		
 		<field name="format"
              type="format"
              default="1"
@@ -75,12 +84,22 @@
              description=""
         />
 		
+		<field name="can_select_format"
+             type="radio"
+             default="1"
+             label="手動選取格式"
+             description="可替每篇文章選擇不同的格式，預設會先使用選項中的全域格式。"
+        >
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
 		<field type="spacer" hr="true" />
 		
 		<field name="image_width"
              type="text"
              default="550"
-             label="圖片寬度"
+             label="圖片最大寬度"
              description="避免圖片太寬破版"
         />
 

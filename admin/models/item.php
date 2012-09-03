@@ -49,20 +49,8 @@ class FbimporterModelitem extends JModel
 		$table 	= JTable::getInstance('content') ;
 		$format = $this->getTable('format') ;
 		$this->params = JComponentHelper::getParams('com_fbimporter');
-		$sample = $this->params->get('format', 1) ;
-		
-		$format->load($sample) ;
-		
-		if(!$format){
-			$this->setError('無法讀取匯入格式，請在元件選項中選擇正確的格式設定。');
-			return false ;
-		}
-		
-		$sample_intro 	= $format->introtext ;
-		$sample_full 	= $format->fulltext ;
 		
 		foreach( $ids as $id ):
-			
 			// reset article
 			$table->id = null ;
 			$table->created 		= null ;
@@ -71,6 +59,19 @@ class FbimporterModelitem extends JModel
 			
 			// get item
 			$item = $items[$id] ;
+			
+			// get format
+			$sample = isset($item['format']) ? $item['format'] : $this->params->get('format', 1) ;
+			
+			$format->load($sample) ;
+			
+			if(!$format){
+				$this->setError('無法讀取匯入格式，請在元件選項中選擇正確的格式設定。');
+				return false ;
+			}
+			
+			$sample_intro 	= $format->introtext ;
+			$sample_full 	= $format->fulltext ;
 			
 			// video type
 			$link 		= base64_decode($item['link']) ; 
@@ -88,9 +89,14 @@ class FbimporterModelitem extends JModel
 			
 			// handle image
 			$uri 	= JFactory::getURI( base64_decode($item['picture']) ) ;
-			$image 	= $uri->getVar('url');
 			$width	= $this->params->get('image_width', 550) ;
-			if($image) $image = '<img src="'.$image.'" alt="'.$item['title'].'" width="'.$width.'" />' ;
+			$image 	= $uri->getVar('url');
+			
+			if(!$image){
+				$image = str_replace('_s.', '_n.', base64_decode($item['picture'])) ;
+			}
+			
+			$image = '<img src="'.$image.'" alt="'.$item['title'].'" style="max-width: '.$width.'px;" />' ;
 			
 			// set replaces
 			$replace['{TITLE}'] 		= $item['title'] ;
@@ -100,6 +106,7 @@ class FbimporterModelitem extends JModel
 			$replace['{FULL_MESSAGE}'] 	= $this->addLink( $full ) ;
 			$replace['{READMORE_LINK}'] = "http://www.facebook.com/animapp/posts/$id" ;
 			$replace['{LINK_NAME}']		= $item['name'] ;
+			$replace['{LIKES}']			= $item['likes'] ;
 			
 			// set article information
 			$date = JFactory::getDate( $item['created'] , JFactory::getConfig()->get('offset') ) ;

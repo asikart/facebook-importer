@@ -25,6 +25,10 @@ class JFormFieldFormat extends JFormFieldList
 	 */
 	public $type = 'Format';
 	
+	public $value ;
+	
+	public $name ; 
+	
 	protected function getOptions()
 	{
 		// Initialise variables.

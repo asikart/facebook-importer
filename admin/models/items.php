@@ -193,7 +193,24 @@ class FbimporterModelItems extends JModelList
 						$item->continue = true ;
 				}
 				
-				// get date
+				// title max char
+				$max = $params->get('title_max_char') ;
+				if($max){
+					if(JString::strlen($item->title) > $max){
+						$item->message .= JString::substr( $item->title, $max )."\n\n";
+						$title = JString::substr( $item->title, 0, $max );
+						
+						$title 		= explode( ' ', $title ) ;
+						$last_word 	= array_pop($title);
+						if($last_word) {
+							$item->message = $last_word.$item->message ;
+						}
+						
+						$item->title = implode(' ', $title);
+					}
+				}
+				
+				// get date & alias
 				$q->clear();
 				$item->date 	= JFactory::getDate( $item->created_time , JFactory::getConfig()->get('offset') );
 				$item->alias 	= JFilterOutput::stringURLSafe($item->title . ' ' . $item->date->format('Y-m-d-H-i-s', true) ) ;
