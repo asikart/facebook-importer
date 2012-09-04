@@ -169,3 +169,5 @@ $saveOrder	= $listOrder == 'a.ordering';
 		<?php echo JHtml::_('form.token'); ?>
 	</div>
 </form>
+<p></p>
+<p align="center"><?php echo JText::_('COM_FBIMPORTER_COPY_RIGHT'); ?></p>

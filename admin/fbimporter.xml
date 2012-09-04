@@ -8,7 +8,7 @@
 	<authorEmail>asika32764@gmail.com</authorEmail>
 	<authorUrl>http://asikart.com</authorUrl>
 	<version>1.0.0</version>
-	<description>Asikart Facebook 匯入工具</description>
+	<description>Facebook 匯入工具</description>
 	
 	<install> <!-- Runs on install -->
     	<sql>
