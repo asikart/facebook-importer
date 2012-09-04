@@ -27,7 +27,7 @@
 		
 		<field name="title_max_char"
              type="text"
-             default="50"
+             default=""
              label="最大標題字數"
              description="如果第一行的長度太多，將會截斷"
         />
@@ -89,6 +89,16 @@
              default="1"
              label="手動選取格式"
              description="可替每篇文章選擇不同的格式，預設會先使用選項中的全域格式。"
+        >
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
+		<field name="sort_by_current"
+             type="radio"
+             default="0"
+             label="以匯入時間排序"
+             description="以匯入的時間做為文章建立時間，若選否，則以FB發佈的時間為準。"
         >
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>

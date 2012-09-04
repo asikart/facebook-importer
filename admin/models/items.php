@@ -197,13 +197,15 @@ class FbimporterModelItems extends JModelList
 				$max = $params->get('title_max_char') ;
 				if($max){
 					if(JString::strlen($item->title) > $max){
-						$item->message .= JString::substr( $item->title, $max )."\n\n";
+						$item->message = JString::substr( $item->title, $max )."\n\n".$item->message;
 						$title = JString::substr( $item->title, 0, $max );
 						
 						$title 		= explode( ' ', $title ) ;
 						$last_word 	= array_pop($title);
-						if($last_word) {
+						if($last_word && JString::strlen($last_word) < 10 ) {
 							$item->message = $last_word.$item->message ;
+						}else{
+							$title[] = $last_word ;
 						}
 						
 						$item->title = implode(' ', $title);

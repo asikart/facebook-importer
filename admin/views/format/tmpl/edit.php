@@ -64,8 +64,10 @@ JHtml::_('behavior.formvalidation');
 				<li><label style="cursor: pointer;" onclick="jInsertEditorText('{FULL_MESSAGE}', 'jform_text')">{FULL_MESSAGE}</label></li><li><input class="readonly" readonly="true" value="文章內文" /></li>
 				<li><label style="cursor: pointer;" onclick="jInsertEditorText('{IMAGE}', 'jform_text')">{IMAGE}</label></li><li><input class="readonly" readonly="true" value="圖片" /></li>
 				<li><label style="cursor: pointer;" onclick="jInsertEditorText('{READMORE_LINK}', 'jform_text')">{READMORE_LINK}</label></li><li><input class="readonly" readonly="true" value="連回Facebook原文的連結" /></li>
+				<li><label style="cursor: pointer;" onclick="jInsertEditorText('{LINK_URL}', 'jform_text')">{LINK_URL}</label></li><li><input class="readonly" readonly="true" value="分享連結、影片等的網址" /></li>
 				<li><label style="cursor: pointer;" onclick="jInsertEditorText('{LINK_NAME}', 'jform_text')">{LINK_NAME}</label></li><li><input class="readonly" readonly="true" value="分享連結、影片等的標題" /></li>
 				<li><label style="cursor: pointer;" onclick="jInsertEditorText('{LIKES}', 'jform_text')">{LIKES}</label></li><li><input class="readonly" readonly="true" value="讚的數量" /></li>
+				<li><label style="cursor: pointer;" onclick="jInsertEditorText('{CREATED_TIME}', 'jform_text')">{CREATED_TIME}</label></li><li><input class="readonly" readonly="true" value="FB上的發佈時間" /></li>
             </ul>
 		</fieldset>
 	</div>

@@ -50,6 +50,13 @@ class FbimporterModelitem extends JModel
 		$format = $this->getTable('format') ;
 		$this->params = JComponentHelper::getParams('com_fbimporter');
 		
+		// if sort by current, reverse ids
+		/*
+		if( $this->params->get('sort_by_current', 0) ){
+			$ids = array_reverse($ids) ;
+		}
+		*/
+		
 		foreach( $ids as $id ):
 			// reset article
 			$table->id = null ;
@@ -59,6 +66,8 @@ class FbimporterModelitem extends JModel
 			
 			// get item
 			$item = $items[$id] ;
+			
+			$date = JFactory::getDate( $item['created'] , JFactory::getConfig()->get('offset') ) ;
 			
 			// get format
 			$sample = isset($item['format']) ? $item['format'] : $this->params->get('format', 1) ;
@@ -103,19 +112,21 @@ class FbimporterModelitem extends JModel
 			$replace['{VIDEO}'] 		= $vid ? "{{$platform}}$vid{/{$platform}}" : $vid ;
 			$replace['{INTRO_MESSAGE}'] = $this->addLink( $intro ) ;
 			$replace['{IMAGE}']			= $image ;
+			$replace['{LINK_URL}']		= $link ;
 			$replace['{FULL_MESSAGE}'] 	= $this->addLink( $full ) ;
-			$replace['{READMORE_LINK}'] = "http://www.facebook.com/animapp/posts/$id" ;
+			$replace['{READMORE_LINK}'] = "http://www.facebook.com/".$this->params->get('fb_uid')."/posts/$id" ;
 			$replace['{LINK_NAME}']		= $item['name'] ;
 			$replace['{LIKES}']			= $item['likes'] ;
+			$replace['{CREATED_TIME}']	= $date->toMySQL(true) ;
 			
 			// set article information
-			$date = JFactory::getDate( $item['created'] , JFactory::getConfig()->get('offset') ) ;
+			
 			
 			$table->title	  = $item['title'] ;
 			$table->catid	  = $item['catid'] ? $item['catid'] : $format->catid ;
 			$table->introtext = strtr( $sample_intro , $replace ) ;
 			$table->fulltext  = strtr( $sample_full , $replace ) ;
-			$table->created	  = $date->toMySQL(true) ;
+			$table->created	  = $this->params->get('sort_by_current', 0) ? JFactory::getDate( 'now' , JFactory::getConfig()->get('offset') )->toMySQL(true) : $date->toMySQL(true) ;
 			$table->alias 	  = JFilterOutput::stringURLSafe($table->title . ' ' . $date->format('Y-m-d-H-i-s', true) ) ;
 			$table->state	  = $format->published ;
 			$table->hits 	  = 0 ;

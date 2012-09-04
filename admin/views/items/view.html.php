@@ -51,7 +51,7 @@ class FbimporterViewItems extends JView
 		$state	= $this->get('State');
 		$canDo	= FbimporterHelper::getActions($state->get('filter.category_id'));
 
-		JToolBarHelper::title('Asikart Facebook 匯入工具', 'fbimporter.png');
+		JToolBarHelper::title(JText::_('COM_FBIMPORTER'), 'fbimporter.png');
 		
 		$doc = JFactory::getDocument();
 		$doc->addStyleDeclaration( ' .icon-48-fbimporter { background-image: url(components/com_fbimporter/images/ak-fbimporter-logo-48.png) ; } ' );
