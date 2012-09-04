@@ -83,7 +83,7 @@ $saveOrder	= $listOrder == 'a.ordering';
 				</td>
 				<td class="center">
 					<a target="_blank" href="http://www.facebook.com/<?php echo $params->get('fb_uid'); ?>/posts/<?php echo $item->id; ?>">
-						<img src="<?php echo $item->get('picture', 'components/com_fbimporter/images/facebook-default.png'); ?>" width="150" onerror="this.src='components/com_fbimporter/images/facebook-default.png';" alt="<?php echo $item->get('title'); ?>" />
+						<img src="<?php echo $item->get('picture', 'components/com_fbimporter/images/facebook-default.png'); ?>" width="150" style="max-height: 150px;" onerror="this.src='components/com_fbimporter/images/facebook-default.png';" alt="<?php echo $item->get('title'); ?>" />
 					</a>
 				</td>
 				<td class="center">
