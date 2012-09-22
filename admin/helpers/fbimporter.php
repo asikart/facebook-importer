@@ -20,6 +20,8 @@ class FbimporterHelper
 	 */
 	public static function addSubmenu($vName = '')
 	{
+		$app = JFactory::getApplication() ;
+		
 		
 		JSubMenuHelper::addEntry(
 			'匯入工具',
@@ -27,11 +29,7 @@ class FbimporterHelper
 			$vName == 'items'
 		);
 		
-		JSubMenuHelper::addEntry(
-			'匯入格式設定',
-			'index.php?option=com_fbimporter&view=formats',
-			$vName == 'formats'
-		);
+		$app->triggerEvent( 'onAfterAddSubmenu', array('com_fbimporter.helper' ,$vName) );
 
 	}
 

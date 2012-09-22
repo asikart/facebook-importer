@@ -45,3 +45,6 @@ $doc->setBase( JFactory::getURI()->toString() );
 
 // include css
 $doc->addStyleSheet('administrator/templates/bluestork/css/template.css');
+
+// version
+FbimporterHelper::_('version.detectVersion');

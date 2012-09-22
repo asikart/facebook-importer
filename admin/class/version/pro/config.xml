@@ -82,17 +82,16 @@
              default="1"
              label="選擇匯入格式"
              description=""
-			 disabled="true"
         />
 		
 		<field name="can_select_format"
              type="radio"
-             default="1"
+             default="0"
              label="手動選取格式"
              description="可替每篇文章選擇不同的格式，預設會先使用選項中的全域格式。"
         >
-			<option disabled="true" value="0">JNO</option>
-			<option disabled="true" value="1">JYES</option>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
 		</field>
 		
 		<field name="sort_by_current"

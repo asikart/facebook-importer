@@ -16,6 +16,8 @@ JHtml::_('behavior.multiselect');
 
 $user	= JFactory::getUser();
 $userId	= $user->get('id');
+$app 	= JFactory::getApplication() ;
+
 $listOrder	= $this->state->get('list.ordering');
 $listDirn	= $this->state->get('list.direction');
 $canOrder	= $user->authorise('core.edit.state', 'com_fbimporter');
@@ -65,14 +67,11 @@ $saveOrder	= $listOrder == 'a.ordering';
 		$params = $this->state->get('params') ;
 		$i = 0 ;
 		
-		JLoader::import( 'models.fields.format' , FBIMPORTER_ADMIN) ;
+		$format_form = null ;
+		$app->triggerEvent( 'onGetFormatForm', array( 'com_fbimporter.items', &$format_form ) );
 		
 		foreach ($this->items as $item ) :
 			if( $item->continue ) continue ;
-			
-			// get format form
-			$format_form = new JFormFieldFormat() ;
-			$format_form->value = $params->get('format');
 			
 			$likes = isset($item->likes->count) ? $item->likes->count : 0;
 			?>
@@ -116,10 +115,11 @@ $saveOrder	= $listOrder == 'a.ordering';
 							?>
 						<?php endif; ?>
 						
-						<?php if( $params->get('can_select_format', 0) ): ?>
+						<?php if( $params->get('can_select_format', 0) && $format_form && FbimporterHelper::_('version.get', 'pro') ): ?>
 							
 							<br />
-							<br /><hr />
+							<br />
+							<hr />
 							選擇格式：
 							<?php
 							$format_form->name = "item[{$item->id}][format]" ;

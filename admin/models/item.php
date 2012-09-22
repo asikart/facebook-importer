@@ -136,9 +136,9 @@ class FbimporterModelitem extends JModel
 			// save
 			$app = JFactory::getApplication();
 			
-			$app->triggerEvent('onContentBeforeSave', 'com_content.form', $table, true ) ;
+			$app->triggerEvent('onContentBeforeSave', array('com_content.form', &$table, true) ) ;
 			$table->store();
-			$app->triggerEvent('onContentAfterSave', 'com_content.form', $table, true ) ;
+			$app->triggerEvent('onContentAfterSave', array('com_content.form', &$table, true) ) ;
 			
 		endforeach;
 		

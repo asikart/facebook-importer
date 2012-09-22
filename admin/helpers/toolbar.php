@@ -7,7 +7,7 @@ defined('_JEXEC') or die;
 
 include_once JPATH_ADMINISTRATOR.DS.'includes'.DS.'toolbar.php' ;
 
-class AKToolBarHelper extends JToolBarHelper
+class AKToolBarHelper
 {
 	static function title ($title, $icon = 'generic.png')
 	{
@@ -27,4 +27,18 @@ class AKToolBarHelper extends JToolBarHelper
 		$app->set('JComponentTitle', $html);
 		
 	}
+	
+	/*
+	 * function __callStatic
+	 * @param 
+	 */
+	
+	public static function __callStatic($name, $args)
+	{
+		$app = JFactory::getApplication() ;
+		
+		$app->triggerEvent('onAKToolbarAppendButton', array($name, &$args) ) ;
+		call_user_func_array( array('JToolBarHelper', $name), $args );
+	}
+
 }

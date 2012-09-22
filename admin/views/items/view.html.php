@@ -67,7 +67,7 @@ class FbimporterViewItems extends JView
 		}
 		
 		if ($canDo->get('core.admin')) {
-			JToolBarHelper::preferences('com_fbimporter');
+			AKToolBarHelper::preferences('com_fbimporter');
 		}
 	}
 }
