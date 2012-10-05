@@ -19,5 +19,5 @@ CREATE TABLE IF NOT EXISTS `#__fbimporter_formats` (
   KEY `cat_index` (`published`,`access`,`catid`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
-INSERT INTO `j256_fbimporter_formats` (`id`, `catid`, `title`, `introtext`, `fulltext`, `ordering`, `published`, `checked_out`, `checked_out_time`, `access`, `language`, `params`) VALUES
+INSERT INTO `#__fbimporter_formats` (`id`, `catid`, `title`, `introtext`, `fulltext`, `ordering`, `published`, `checked_out`, `checked_out_time`, `access`, `language`, `params`) VALUES
 (1, 1, '基本格式一', '<p>{IMAGE}</p>\r\n<p>{CREATED_TIME} - {LIKES} Likes</p>\r\n<p>{INTRO_MESSAGE}</p>\r\n', '\r\n<p> </p>\r\n<h3>{LINK_NAME}</h3>\r\n<p>{VIDEO}</p>\r\n<p>{FULL_MESSAGE} </p>\r\n<p> </p>\r\n<p>Source: {LINK_URL}</p>\r\n<p> </p>\r\n<p class="ja-typo-box box-hilite-1"><strong>Readmore:</strong> <a href="{READMORE_LINK}" target="_blank">{READMORE_LINK}</a></p>\r\n<p> </p>', 1, 1, 0, '0000-00-00 00:00:00', 1, '*', '');
