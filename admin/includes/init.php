@@ -28,8 +28,8 @@ jimport('joomla.html.toolbar');
 
 // include Component Custom class
 include_once JPath::clean( FBIMPORTER_ADMIN."/class/viewpanel.class.php" ) ;
-include_once JPath::clean( FBIMPORTER_ADMIN."/helpers/aktext.php" ) ;
-include_once JPath::clean( FBIMPORTER_ADMIN."/helpers/toolbar.php" ) ;
+//include_once JPath::clean( FBIMPORTER_ADMIN."/helpers/aktext.php" ) ;
+//include_once JPath::clean( FBIMPORTER_ADMIN."/helpers/toolbar.php" ) ;
 include_once JPath::clean( JPATH_ADMINISTRATOR."/includes/toolbar.php" ) ;
 
 if( $app->isSite() ){
