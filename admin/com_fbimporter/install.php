@@ -14,7 +14,7 @@ defined('_JEXEC') or die;
 /**
  * Script file of HelloWorld component
  */
-class com_AkextensionInstallerScript
+class com_FbimporterInstallerScript
 {
 	/**
 	 * method to install the component
