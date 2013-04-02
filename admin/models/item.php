@@ -15,7 +15,7 @@ jimport('joomla.application.component.modeladmin');
 /**
  * Fbimporter model.
  */
-class FbimporterModelitem extends JModel
+class FbimporterModelitem extends JModelLegacy
 {
 	/**
 	 * @var		string	The prefix to use with controller messages.
@@ -75,7 +75,7 @@ class FbimporterModelitem extends JModel
 			$format->load($sample) ;
 			
 			if(!$format){
-				$this->setError('無法讀取匯入格式，請在元件選項中選擇正確的格式設定。');
+				$this->setError(JText::_('COM_FBIMPORTER_CANNOT_GET_IMPORT_FORMAT'));
 				return false ;
 			}
 			
@@ -117,7 +117,7 @@ class FbimporterModelitem extends JModel
 			$replace['{READMORE_LINK}'] = "http://www.facebook.com/".$this->params->get('fb_uid')."/posts/$id" ;
 			$replace['{LINK_NAME}']		= $item['name'] ;
 			$replace['{LIKES}']			= $item['likes'] ;
-			$replace['{CREATED_TIME}']	= $date->toMySQL(true) ;
+			$replace['{CREATED_TIME}']	= $date->toSQL(true) ;
 			
 			// set article information
 			
@@ -126,7 +126,7 @@ class FbimporterModelitem extends JModel
 			$table->catid	  = $item['catid'] ? $item['catid'] : $format->catid ;
 			$table->introtext = strtr( $sample_intro , $replace ) ;
 			$table->fulltext  = strtr( $sample_full , $replace ) ;
-			$table->created	  = $this->params->get('sort_by_current', 0) ? JFactory::getDate( 'now' , JFactory::getConfig()->get('offset') )->toMySQL(true) : $date->toMySQL(true) ;
+			$table->created	  = $this->params->get('sort_by_current', 0) ? JFactory::getDate( 'now' , JFactory::getConfig()->get('offset') )->toSQL(true) : $date->toSQL(true) ;
 			$table->alias 	  = JFilterOutput::stringURLSafe($table->title . ' ' . $date->format('Y-m-d-H-i-s', true) ) ;
 			$table->state	  = $format->published ;
 			$table->hits 	  = 0 ;
@@ -136,9 +136,9 @@ class FbimporterModelitem extends JModel
 			// save
 			$app = JFactory::getApplication();
 			
-			$app->triggerEvent('onContentBeforeSave', array('com_content.form', &$table, true) ) ;
+			$app->triggerEvent('onContentBeforeSave', array('com_content.form', $table, true) ) ;
 			$table->store();
-			$app->triggerEvent('onContentAfterSave', array('com_content.form', &$table, true) ) ;
+			$app->triggerEvent('onContentAfterSave', array('com_content.form', $table, true) ) ;
 			
 		endforeach;
 		

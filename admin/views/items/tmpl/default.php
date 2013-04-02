@@ -13,21 +13,44 @@ defined('_JEXEC') or die;
 
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.multiselect');
+FMHelper::_('include.core');
 
+
+
+// Init some API objects
+// ================================================================================
+$app 	= JFactory::getApplication() ;
+$date 	= JFactory::getDate( 'now' , JFactory::getConfig()->get('offset') ) ;
+$doc 	= JFactory::getDocument();
+$uri 	= JFactory::getURI() ;
 $user	= JFactory::getUser();
 $userId	= $user->get('id');
-$app 	= JFactory::getApplication() ;
 
+
+
+// List Control
+// ================================================================================
 $listOrder	= $this->state->get('list.ordering');
 $listDirn	= $this->state->get('list.direction');
-$canOrder	= $user->authorise('core.edit.state', 'com_fbimporter');
-$saveOrder	= $listOrder == 'a.ordering';
+$originalOrders = array();
+
+
+// For Joomla!3.0
+// ================================================================================
+if( JVERSION >= 3 ) {
+	JHtml::_('bootstrap.tooltip');
+	JHtml::_('dropdown.init');
+	JHtml::_('formbehavior.chosen', 'select');
+
+}else{
+	
+}
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_fbimporter&view=items'); ?>" method="post" name="adminForm" id="adminForm">
 	<fieldset id="filter-bar">
-		<div class="filter-search fltlft">
-			<label class="import-num-lbl" for="import_num"><?php echo JText::_('COM_FBIMPORTER_CACHE_NUM') ; ?></label>
-			<?php echo JHtml::_('select.integerlist', 50, 1000, 50 , 'import_num', array('onchange'=>"Joomla.submitbutton('items.refresh')"), $this->state->get('import_num') ); ?>
+		<div class="filter-search fltlft ">
+			<label class="import-num-lbl pull-left" for="import_num"><?php echo JText::_('COM_FBIMPORTER_CACHE_NUM') ; ?></label>
+			<?php echo JHtml::_('select.integerlist', 50, 1000, 50 , 'import_num', array('onchange'=>"Joomla.submitbutton('items.refresh');", 'class' => 'pull-left'), $this->state->get('import_num') ); ?>
 			
 		</div>
 		
@@ -40,7 +63,7 @@ $saveOrder	= $listOrder == 'a.ordering';
 	</fieldset>
 	<div class="clr"> </div>
 
-	<table class="adminlist">
+	<table class="adminlist table table table-striped">
 		<thead>
 			<tr>
 				<th width="1%">
@@ -77,15 +100,21 @@ $saveOrder	= $listOrder == 'a.ordering';
 			$likes = isset($item->likes->count) ? $item->likes->count : 0;
 			?>
 			<tr class="row<?php echo $i % 2; ?>">
+				
+				<!--CHECKBOX-->
 				<td class="center" style="padding: 0;">
 					<input style="width:100%; height:100%; <?php echo $item->exists ? 'visibility: hidden ;' : null; ?>" type="checkbox" id="cb<?php echo $i; ?>" <?php echo $item->exists ? 'disabled="true"' : null; ?>
 							name="cid[<?php echo $item->likes->count; ?>]" value="<?php echo $item->id; ?>" onclick="Joomla.isChecked(this.checked);" title="<?php echo JText::sprintf('COM_FBIMPORTER_ROW %s COM_FBIMPORTER_CHECKBOX', $i+1);?>" />
 				</td>
+				
+				<!--IMAGE-->
 				<td class="center">
 					<a target="_blank" href="http://www.facebook.com/<?php echo $params->get('fb_uid'); ?>/posts/<?php echo $item->id; ?>">
 						<img src="<?php echo $item->get('picture', 'components/com_fbimporter/images/facebook-default.png'); ?>" style="max-width:150px;max-height: 150px;" onerror="this.src='components/com_fbimporter/images/facebook-default.png';" alt="<?php echo $item->get('title'); ?>" />
 					</a>
 				</td>
+				
+				<!--TIME-->
 				<td class="center">
 					<p>
 						<?php echo $item->date->format('Y-m-d') ; ?>
@@ -102,6 +131,8 @@ $saveOrder	= $listOrder == 'a.ordering';
 						<a target="_blank" href="http://www.facebook.com/<?php echo $params->get('fb_uid'); ?>/posts/<?php echo $item->id; ?>">[<?php echo JText::_('COM_FBIMPORTER_ORIGIN_LINK');?>]</a>
 					</p>
 				</td>
+				
+				<!--CAREGORY & FORMAT-->
 				<td align="">
 					<?php if( !$item->exists ): ?>
 						<?php if( $item->catid && !$params->get('select_category_when_exists', 1) ): ?>
@@ -112,7 +143,11 @@ $saveOrder	= $listOrder == 'a.ordering';
 							if(!$item->catid){
 								$item->catid = $params->get('catid') ;
 							}
-							echo JHtml::_('list.category', "item[{$item->id}][catid]", 'com_content', $item->catid);
+							
+							echo JHtml::_(
+								'select.genericlist', JHtml::_('category.options', 'com_content'), "item[{$item->id}][catid]", 'class="inputbox"', 'value', 'text',
+								$item->catid
+							);
 							?>
 						<?php endif; ?>
 						
@@ -131,6 +166,9 @@ $saveOrder	= $listOrder == 'a.ordering';
 						<div align="center" style="color:#C00;">(<?php echo JText::_('COM_FBIMPORTER_HAVE_IMPORTED'); ?>)</div>
 					<?php endif; ?>
 				</td>
+				
+				
+				<!--TITLE-->
 				<td>
 					<?php if( $item->exists ): ?>
 						<h3><?php echo $item->title; ?></h3>
@@ -138,6 +176,9 @@ $saveOrder	= $listOrder == 'a.ordering';
 						<textarea type="text" name="item[<?php echo $item->id; ?>][title]" style="width:100%;height:100px;"><?php echo $item->get('title'); ?></textarea>
 					<?php endif; ?>
 				</td>
+				
+				
+				<!--TEXT-->
 				<td>
 					<?php if( !$item->exists ): ?>
 					<textarea name="item[<?php echo $item->id; ?>][message]" style="width:100%;height:100px;"><?php

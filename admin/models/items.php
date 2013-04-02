@@ -117,11 +117,12 @@ class FbimporterModelItems extends JModelList
 	
 	public function getItems() {
 		
-		$db = JFactory::getDbo() ;
-		$q = $db->getQuery(true) ;
+		$db 	= JFactory::getDbo() ;
+		$q 		= $db->getQuery(true) ;
 		$params = $this->getState('params');
-		$temp = $this->temp ;
-		$date = JFactory::getDate( 'now' , JFactory::getConfig()->get('offset') ) ;
+		$temp 	= $this->temp ;
+		$date 	= JFactory::getDate( 'now' , JFactory::getConfig()->get('offset') ) ;
+		$categories = $this->getCategories();
 		
 		$r = '' ;
 		
@@ -142,23 +143,28 @@ class FbimporterModelItems extends JModelList
 					continue ;
 				}
 
+				
 
-				// set title
+				// Separate First Line As Title
+				// ====================================================================
 				$item->message = nl2br($item->message);
 				$item->message = explode( '<br />' , $item->message );
-				$item->title   = $title = $item->message;
-				//AK::show($item->title) ;
+				$item->title   = $title = array_shift($item->message);
 				
 				// set message and id
 				$item->message = implode( '<br />' , $item->message );
 				$item->id = explode( '_' , $item->id );
 				$item->id = $item->id[1] ;
-			
-				// set category
+				
+				
+				
+				
+				// Set Category Detect Rules
+				// ====================================================================
 				$escape = "[]{}()$^.*?-=+&%#!" ;
 				
-				$lft 	= $params->get('category_match_left');
-				$rgt	= $params->get('category_match_right');
+				$lft    = $params->get('category_match_left');
+				$rgt    = $params->get('category_match_right');
 				
 				if( strpos( $escape ,$lft) !== false ){
 					$lft = '\\'.$lft ;
@@ -168,24 +174,23 @@ class FbimporterModelItems extends JModelList
 					$rgt = '\\'.$rgt ;
 				}
 				
-				//$regex 	= "/{$lft}(.*){$rgt}(.*)/" ;
-				//preg_match( $regex, trim($title), $matches ); // get cat name
+				
+				
+				
+				// Match Category Name
+				// ====================================================================
+				$regex 	= "/{$lft}(.*){$rgt}(.*)/" ;
+				preg_match( $regex, trim($title), $matches ); // get cat name
 				
 				$item->catid = null ;
 				
 				if(isset($matches[1]) && $matches[2]){
-					$category_name 	= $matches[1] ;
+					$category_name 	= trim($matches[1]) ;
 					
-					$q->select('id')
-						->from('#__categories')
-						->where("title='{$category_name}'")
-						->where("extension='com_content'")
-						;
-					$db->setQuery($q);
-					$result = $db->loadResult();
+					$result = FMHelper::_('array.query', $categories, array( 'title' => strtolower($category_name) ));
 					
-					if($result){
-						$item->catid 	= $result ;
+					if(count($result) > 0){
+						$item->catid 	= $result[0]->id ;
 						$item->title 	= trim($matches[2]) ;
 						$item->cat_name = $category_name ;
 					}
@@ -196,7 +201,10 @@ class FbimporterModelItems extends JModelList
 						$item->continue = true ;
 				}
 				
-				// title max char
+				
+				
+				// title Max Char
+				// ====================================================================
 				$max = $params->get('title_max_char') ;
 				if($max){
 					if(JString::strlen($item->title) > $max){
@@ -215,7 +223,10 @@ class FbimporterModelItems extends JModelList
 					}
 				}
 				
+				
+				
 				// get date & alias
+				// ====================================================================
 				$q->clear();
 
 				$item->date 	= JFactory::getDate( $item->created_time , JFactory::getConfig()->get('offset') );
@@ -238,6 +249,8 @@ class FbimporterModelItems extends JModelList
 			return array();
 		}
 	}
+	
+	
 	
 	/*
 	 * function refresh
@@ -271,5 +284,32 @@ class FbimporterModelItems extends JModelList
 		JPath::setPermissions( $temp );
 		JFile::write( $temp , json_encode($r) );
 		JFile::write( $temp.'X.txt' , print_r($r, 1) );
+	}
+	
+	
+	
+	/*
+	 * function getCategories
+	 * @param $extension
+	 */
+	
+	public function getCategories($extension = 'com_content')
+	{
+		$db = JFactory::getDbo();
+		$q = $db->getQuery(true) ;
+		
+		$q->select("*")
+			->from("#__categories")
+			->where("extension = '{$extension}'")
+			;
+		
+		$db->setQuery($q);
+		$cats = $db->loadObjectList('id');
+		
+		foreach( $cats as &$cat ):
+			$cat->title = strtolower($cat->title) ;
+		endforeach;
+		
+		return $cats ;
 	}
 }
