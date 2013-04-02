@@ -70,7 +70,7 @@ if( JVERSION >= 3 ) {
 					<input type="checkbox" name="checkall-toggle" value="" onclick="checkAll(this)" />
 				</th>
 				<th width="3%"><?php echo JText::_('COM_FBIMPORTER_IMAGE') ; ?></th>
-				<th width="8%"><?php echo JText::_('COM_FBIMPORTER_TIME') ; ?></th>
+				<th width="10%"><?php echo JText::_('COM_FBIMPORTER_TIME') ; ?></th>
 				<th width="14%"><?php echo JText::_('COM_FBIMPORTER_CATEGORY') ; ?></th>
 				<th width="20%"><?php echo JText::_('COM_FBIMPORTER_TITLE') ; ?></th>
 				<th><?php echo JText::_('COM_FBIMPORTER_FULLTEXT') ; ?></th>
@@ -108,19 +108,19 @@ if( JVERSION >= 3 ) {
 				</td>
 				
 				<!--IMAGE-->
-				<td class="center">
+				<td class="center" style="vertical-align: middle;">
 					<a target="_blank" href="http://www.facebook.com/<?php echo $params->get('fb_uid'); ?>/posts/<?php echo $item->id; ?>">
-						<img src="<?php echo $item->get('picture', 'components/com_fbimporter/images/facebook-default.png'); ?>" style="max-width:150px;max-height: 150px;" onerror="this.src='components/com_fbimporter/images/facebook-default.png';" alt="<?php echo $item->get('title'); ?>" />
+						<img class="img-polaroid" src="<?php echo $item->get('picture', 'components/com_fbimporter/images/facebook-default.png'); ?>" style="max-width:150px;max-height: 150px;" onerror="this.src='components/com_fbimporter/images/facebook-default.png';" alt="<?php echo $item->get('title'); ?>" />
 					</a>
 				</td>
 				
 				<!--TIME-->
 				<td class="center">
 					<p>
-						<?php echo $item->date->format('Y-m-d') ; ?>
+						<?php echo $item->date->format('Y-m-d', true) ; ?>
 						<br />
-						<?php echo $item->date->format('H:i:s') ; ?>
-						(<?php echo $item->date->format('D'); ?>)	
+						<?php echo $item->date->format('H:i:s', true) ; ?>
+						(<?php echo $item->date->format('D', true); ?>)	
 					</p>
 					<p>
 						<?php echo JText::_('COM_FBIMPORTER_FB_LIKE') ;?>：<span style="color: blue;"><?php echo $likes; ?></span>
@@ -128,7 +128,11 @@ if( JVERSION >= 3 ) {
 						<?php echo JText::_('COM_FBIMPORTER_TYPE') ;?>：<span style="color: red;"><?php echo $item->get('type'); ?></span>
 					</p>
 					<p>
+						<?php if( JVERSION >= 3 ): ?>
+						<a class="btn btn-info" target="_blank" href="http://www.facebook.com/<?php echo $params->get('fb_uid'); ?>/posts/<?php echo $item->id; ?>"><?php echo JText::_('COM_FBIMPORTER_ORIGIN_LINK');?></a>
+						<?php else: ?>
 						<a target="_blank" href="http://www.facebook.com/<?php echo $params->get('fb_uid'); ?>/posts/<?php echo $item->id; ?>">[<?php echo JText::_('COM_FBIMPORTER_ORIGIN_LINK');?>]</a>
+						<?php endif; ?>
 					</p>
 				</td>
 				
