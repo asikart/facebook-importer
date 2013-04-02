@@ -14,8 +14,8 @@ defined('_JEXEC') or die;
 
 // Detect is AKHelper exists
 // ===============================================================
-$old_akhelper_path = JPATH_PLUGINS.'/system/asikart_easyset/windwalker/init.php' ;
-if( !file_exists($old_akhelper_path) && class_exists('AKHelper') ) {
+$es_xml = JPATH_PLUGINS.'/system/asikart_easyset/asikart_easyset.xml' ;
+if( JFile::exists($es_xml) && JFactory::getXML($es_xml)->version < 2.6 ) {
 	$message = 'Please disable Asikart Easyset plugin or upgrade to 2.6 later.' ;
 	if(JRequest::getVar('option') == 'com_cpanel'){
 		JError::raiseWarning(500, $message) ;
@@ -55,16 +55,17 @@ if( !defined('AKPATH_ROOT') ) {
 	include_once AKPATH_ROOT.'/init.php' ;
 }
 
-// include_once JPath::clean( JPATH_ADMINISTRATOR . "/components/com_akextension/helpers/akextension.php" ) ;
-// include_once JPath::clean( JPATH_ADMINISTRATOR . "/components/com_akextension/includes/loader.php" ) ;
-// 
-// 
-// // Set default option to path helper, then AKHelperPath will helpe us get admin path.
-// AKHelper::_('path.setOption', 'com_akextension') ;
-// 
-// 
-// // Set Component helper prefix, and AKProxy can use component helper first.
-// // If component helper and methods not exists, AKProxy will call AKHelper instead.
-// AKHelper::setPrefix('AkextensionHelper') ;
-// AKHelper::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_akextension/helpers');
+include_once JPath::clean( JPATH_ADMINISTRATOR . "/components/com_fbimporter/helpers/fbimporter.php" ) ;
+include_once JPath::clean( JPATH_ADMINISTRATOR . "/components/com_fbimporter/includes/loader.php" ) ;
+
+
+// Set default option to path helper, then AKHelperPath will helpe us get admin path.
+AKHelper::_('path.setOption', 'com_fbimporter') ;
+
+
+// Set Component helper prefix, and AKProxy can use component helper first.
+// If component helper and methods not exists, AKProxy will call AKHelper instead.
+AKHelper::setPrefix('FbimporterHelper') ;
+AKHelper::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_fbimporter/helpers');
+
 

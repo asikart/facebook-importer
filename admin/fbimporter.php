@@ -17,11 +17,11 @@ if (!JFactory::getUser()->authorise('core.manage', 'com_fbimporter')) {
 }
 
 // init
-include_once 'includes'.DS.'init.php';
+include_once JPATH_COMPONENT_ADMINISTRATOR.'/includes/init.php';
 
 // Include dependancies
 jimport('joomla.application.component.controller');
 
-$controller	= JController::getInstance('Fbimporter');
-$controller->execute(JRequest::getCmd('task'));
+$controller	= JControllerLegacy::getInstance('Fbimporter');
+$controller->execute( JFactory::getApplication()->input->get('task') );
 $controller->redirect();

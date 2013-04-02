@@ -10,12 +10,12 @@
 // No direct access
 defined('_JEXEC') or die;
 
-jimport('joomla.application.component.view');
+include_once AKPATH_COMPONENT.'/viewlist.php' ;
 
 /**
  * View class for a list of Fbimporter.
  */
-class FbimporterViewItems extends JView
+class FbimporterViewItems extends AKViewList
 {
 	protected $items;
 	protected $pagination;
