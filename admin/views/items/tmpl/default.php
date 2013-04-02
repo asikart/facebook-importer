@@ -135,6 +135,8 @@ if( JVERSION >= 3 ) {
 				<!--CAREGORY & FORMAT-->
 				<td align="">
 					<?php if( !$item->exists ): ?>
+						
+						<!--CATEGORY-->
 						<?php if( $item->catid && !$params->get('select_category_when_exists', 1) ): ?>
 							<?php echo $item->cat_name; ?>
 							<input type="hidden" name="item[<?php echo $item->id; ?>][catid]" 	value="<?php echo $item->catid; ?>" />
@@ -144,13 +146,24 @@ if( JVERSION >= 3 ) {
 								$item->catid = $params->get('catid') ;
 							}
 							
+							
 							echo JHtml::_(
 								'select.genericlist', JHtml::_('category.options', 'com_content'), "item[{$item->id}][catid]", 'class="inputbox"', 'value', 'text',
 								$item->catid
 							);
 							?>
+							
+							
+							<?php if( $item->cat_matched ): ?>
+								<?php if( JVERSION >= 3 ): ?>
+								<span class="label label-info"><?php echo JText::_('COM_FBIMPORTER_CATEGORY_AUTO_MATCHED'); ?></span>
+								<?php else: ?>
+								<span style="color:blue;">(<?php echo JText::_('COM_FBIMPORTER_CATEGORY_AUTO_MATCHED'); ?>)</span>
+								<?php endif; ?>
+							<?php endif; ?>
 						<?php endif; ?>
 						
+						<!--FORMAT-->
 						<?php if( $params->get('can_select_format', 0) && $format_form && FbimporterHelper::_('plugin.get', 'pro') ): ?>
 							
 							<br />

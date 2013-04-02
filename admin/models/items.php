@@ -183,6 +183,7 @@ class FbimporterModelItems extends JModelList
 				preg_match( $regex, trim($title), $matches ); // get cat name
 				
 				$item->catid = null ;
+				$item->cat_matched = 0 ;
 				
 				if(isset($matches[1]) && $matches[2]){
 					$category_name 	= trim($matches[1]) ;
@@ -193,6 +194,7 @@ class FbimporterModelItems extends JModelList
 						$item->catid 	= $result[0]->id ;
 						$item->title 	= trim($matches[2]) ;
 						$item->cat_name = $category_name ;
+						$item->cat_matched = 1 ;
 					}
 					
 				}else{
