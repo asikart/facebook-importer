@@ -151,7 +151,7 @@ if( JVERSION >= 3 ) {
 							?>
 						<?php endif; ?>
 						
-						<?php if( $params->get('can_select_format', 0) && $format_form && FbimporterHelper::_('version.get', 'pro') ): ?>
+						<?php if( $params->get('can_select_format', 0) && $format_form && FbimporterHelper::_('plugin.get', 'pro') ): ?>
 							
 							<br />
 							<br />
