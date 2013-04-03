@@ -1,71 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-	<fieldset name="information">
-		
-		<field name="title"
-			type="text"
-			label="JGLOBAL_TITLE"
-			description="JFIELD_TITLE_DESC"
-			required="true"
-			size="50"
-		/>
-
-        <field name="published"
-	        type="list"
-	        label="JSTATUS"
-	        description="JFIELD_PUBLISHED_DESC"
-	        class="inputbox"
-	        size="1"
-	        default="1"
-		>
-	        <option value="1">JPUBLISHED</option>
-	        <option value="0">JUNPUBLISHED</option>
-        </field>
-		
-		<field name="catid"
-			type="category"
-			label="JCATEGORY"
-			description="JFIELD_CATEGORY_DESC"
-			extension="com_content"
-		/>
-		
-		<field name="text"
-			type="editor"
-			label="內文"
-			description="COM_FBIMPORTER_INTROTEXT_DESC"
-			filter="raw"
-			buttons="true"
-			height="500"
-		/>
-
-        <field name="checked_out" type="hidden" filter="unset" />
-    	<field name="checked_out_time" type="hidden" filter="unset" />
-
-	</fieldset>
+	<fields name="basic">
+		<fieldset name="information">
+			
+			<field name="title"
+				type="text"
+				label="JGLOBAL_TITLE"
+				description="JFIELD_TITLE_DESC"
+				required="true"
+				size="50"
+			/>
 	
-	<fieldset name="created">
-		<field name="id" 
-			type="text" 
-			default="0" 
-			label="JGLOBAL_FIELD_ID_LABEL"
-        	readonly="true" 
-			class="readonly"
-        	description="JGLOBAL_FIELD_ID_DESC"
-		/>
+			<field name="published"
+				type="list"
+				label="JSTATUS"
+				description="JFIELD_PUBLISHED_DESC"
+				class="inputbox"
+				size="1"
+				default="1"
+			>
+				<option value="1">JPUBLISHED</option>
+				<option value="0">JUNPUBLISHED</option>
+			</field>
+			
+			<field name="catid"
+				type="category"
+				label="JCATEGORY"
+				description="JFIELD_CATEGORY_DESC"
+				extension="com_content"
+			/>
+			
+			<field name="text"
+				type="editor"
+				label="內文"
+				description="COM_FBIMPORTER_INTROTEXT_DESC"
+				filter="raw"
+				buttons="true"
+				height="500"
+			/>
+	
+			<field name="checked_out" type="hidden" filter="unset" />
+			<field name="checked_out_time" type="hidden" filter="unset" />
+	
+		</fieldset>
 		
-		<field name="access"
-			type="accesslevel"
-			label="JFIELD_ACCESS_LABEL"
-			description="JFIELD_ACCESS_DESC"
-		/>
-		
-		<field name="language"
-			type="language"
-			label="JGRID_HEADING_LANGUAGE"
-			description="JGRID_HEADING_LANGUAGE"
-		>
-			<option value="*">JALL</option>
-		</field>
-	</fieldset>
-
+		<fieldset name="created">
+			<field name="id" 
+				type="text" 
+				default="0" 
+				label="JGLOBAL_FIELD_ID_LABEL"
+				readonly="true" 
+				class="readonly"
+				description="JGLOBAL_FIELD_ID_DESC"
+			/>
+			
+			<field name="access"
+				type="accesslevel"
+				label="JFIELD_ACCESS_LABEL"
+				description="JFIELD_ACCESS_DESC"
+			/>
+			
+			<field name="language"
+				type="language"
+				label="JGRID_HEADING_LANGUAGE"
+				description="JGRID_HEADING_LANGUAGE"
+			>
+				<option value="*">JALL</option>
+			</field>
+		</fieldset>
+	</fields>
+	
+	<!-- Need this field br child of root node for access setting. -->
+	<field name="asset_id" type="hidden" filter="unset" />
+	
+	<fields name="rules">
+		<fieldset name="rules">
+			<field name="rules"
+				type="rules"
+				label=""
+				translate_label="false"
+				class="inputbox"
+				filter="rules"
+				component="com_fbimporter"
+				section="format"
+				validate="rules"
+			/>
+		</fieldset>
+	</fields>
+	
 </form>

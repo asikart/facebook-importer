@@ -25,11 +25,19 @@ class FbimporterHelper extends AKProxy
 		$app = JFactory::getApplication() ;
 		
 		
-		JSubMenuHelper::addEntry(
-			JText::_('COM_FBIMPORTER_TOOL'),
-			'index.php?option=com_fbimporter&view=items',
-			$vName == 'items'
-		);
+		if( JVERSION >= 3 ) {
+			JHtmlSidebar::addEntry(
+				JText::_('COM_FBIMPORTER_TOOL'),
+				'index.php?option=com_fbimporter&view=items',
+				$vName == 'items'
+			);
+		}else{
+			JSubMenuHelper::addEntry(
+				JText::_('COM_FBIMPORTER_TOOL'),
+				'index.php?option=com_fbimporter&view=items',
+				$vName == 'items'
+			);
+		}
 		
 		$app->triggerEvent( 'onAfterAddSubmenu', array('com_fbimporter.helper' ,$vName) );
 

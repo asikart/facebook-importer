@@ -55,12 +55,21 @@ class plgFbimporterPro extends JPlugin
 	
 	public function onAfterAddSubmenu($context, $vName)
 	{
-		JSubMenuHelper::addEntry(
-			JText::_('COM_FBIMPORTER_FORMAT_SETTING'),
-			'index.php?option=com_fbimporter&view=formats',
-			$vName == 'formats'
-		);
-		$this->call('aaa::bbb');
+		if( JVERSION >= 3 ) {
+			JHtmlSidebar::addEntry(
+				JText::_('COM_FBIMPORTER_FORMAT_SETTING'),
+				'index.php?option=com_fbimporter&view=formats',
+				$vName == 'formats'
+			);
+		}else{
+			JSubMenuHelper::addEntry(
+				JText::_('COM_FBIMPORTER_FORMAT_SETTING'),
+				'index.php?option=com_fbimporter&view=formats',
+				$vName == 'formats'
+			);
+		}
+		
+		
 	}
 	
 	/*

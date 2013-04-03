@@ -147,6 +147,64 @@ class FbimporterModelitem extends JModelLegacy
 	
 	
 	/*
+	 * function saveAsCombined
+	 * @param $arg
+	 */
+	
+	public function saveAsCombined() {
+		$items 	= JRequest::getVar('item') ;
+		$ids 	= JRequest::getVar('cid') ;
+		$table 	= JTable::getInstance('content') ;
+		$sample = Akmanager::get('animapp.fb_import_sample_weekly') ;
+		
+		$table->load($sample) ;
+		$sample_intro 	= $table->introtext ;
+		$sample_full 	= $table->fulltext ;
+		
+		krsort($ids);
+		$posts = array();
+		foreach( $ids as $id ):
+			
+			// get item
+			$item = $items[$id] ;
+			
+			// set video
+			$link 		= base64_decode($item['link']) ;
+			$r 			= $this->handleVideoType($link) ;
+			$platform 	= $r['platform'] ;
+			$vid 		= $r['vid'] ;
+			
+			$replace['{WEEKLY_TITLE}'] 		= $item['title'] ;
+			$replace['{WEEKLY_LIKE_LINK}'] 	= "http://www.facebook.com/animapp/posts/$id" ;
+			$replace['{WEEKLY_LIKE}'] 		= $item['likes'] ;
+			$replace['{WEEKLY_MESSAGE}'] 	= $this->addLink( nl2br($item['message']) );
+			$replace['{WEEKLY_VIDEO}'] 		= "{{$platform}}$vid{/{$platform}}" ;
+			$replace['{WEEKLY_LINK_NAME}']	= $item['name'] ;
+			
+			$posts[] = strtr($sample_full , $replace );
+		endforeach;
+		
+		// reset article
+		$table->id = null ;
+		$table->created 		= null ;
+		$table->published_up 	= null ;
+		$table->published_down 	= null ;
+		
+		$table->title	  = 'AnimApp 一週精選 00/00 ~ 00/00' ;
+		$table->alias 	  = JFilterOutput::stringURLSafe('animapp-weekly-videos-' . uniqid() ) ;
+		$table->introtext = $sample_intro ;
+		$table->fulltext  = implode( "\n" , $posts ) ;
+		$table->state	  = 0 ;
+		$table->hits 	  = 0 ;
+		$table->created_by= JFactory::getUser()->get('id') ;
+		
+		$table->store();
+		
+		return $table->id ;
+	}
+	
+	
+	/*
 	 * function handleVideoType
 	 * @param $link
 	 */

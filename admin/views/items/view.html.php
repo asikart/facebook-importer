@@ -63,7 +63,7 @@ class FbimporterViewItems extends AKViewList
 
 		if ($canDo->get('core.create')) {
 			JToolBarHelper::custom( 'item.saveAll' , 'new' , 'new' , 'COM_FBIMPORTER_IMPORT' , true ) ;
-			//JToolBarHelper::custom( 'fb.saveAsWeekly' , 'publish' , 'publish' , '匯入至一週精選' , true ) ;
+			JToolBarHelper::custom( 'item.saveAsCombined' , 'new' , 'new' , 'COM_FBIMPORTER_IMPORT_AS_COMBINED' , true ) ;
 			JToolBarHelper::divider();
 			JToolBarHelper::custom( 'items.refresh' , 'refresh' , 'refresh' , 'COM_FBIMPORTER_REFRESH' , false);
 		}
