@@ -106,7 +106,7 @@ class FbimporterModelFormat extends AKModelAdmin
 	{
 		if($item = parent::getItem($pk)){
 			
-			
+			$item->text = $item->introtext . '<hr id="system-readmore" />' . $item->fulltext ;
 			
 			return $item ;	
 		}
@@ -151,6 +151,19 @@ class FbimporterModelFormat extends AKModelAdmin
 	
 	
 	
+	/*
+	 * function getFields
+	 * @param 
+	 */
+	
+	public function getFieldsGroup()
+	{
+		AKHelper::_('path.setOption', 'com_fbimporter') ;
+		return parent::getFieldsGroup();
+	}
+	
+	
+	
 	/**
 	 * A protected method to get a set of ordering conditions.
 	 *
@@ -173,7 +186,15 @@ class FbimporterModelFormat extends AKModelAdmin
 	 */
 	protected function prepareTable(&$table)
 	{
-		return parent::prepareTable($table);
+		$jform = $_REQUEST['jform'];
+		$text = explode( '<hr id="system-readmore" />', $jform['basic']['text']) ;
+		
+		$table->introtext = $text[0] ;
+		$table->fulltext  = $text[1] ;
+		
+		parent::prepareTable($table);
+		
+		unset($table->alias);
 	}
 	
 	
