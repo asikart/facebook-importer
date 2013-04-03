@@ -144,12 +144,13 @@ class FbimporterModelitem extends JModelLegacy
 		$table->published_up 	= null ;
 		$table->published_down 	= null ;
 		
-		$table->title	  = 'A Combined Article' ;
+		$table->title	  = $this->params->get('combined_article_title',  'A Combined Article') ;
 		$table->alias 	  = JFilterOutput::stringURLSafe('content-from-facebook-' . uniqid() ) ;
 		$table->introtext = $sample_intro ;
 		$table->fulltext  = implode( "\n" , $posts ) ;
 		$table->state	  = 0 ;
 		$table->hits 	  = 0 ;
+		$table->catid	  = $format->catid ;
 		$table->created_by= JFactory::getUser()->get('id') ;
 		
 		$table->store();

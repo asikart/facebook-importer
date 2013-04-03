@@ -11,6 +11,7 @@
 // no direct access
 defined('_JEXEC') or die;
 
+JHtml::_('behavior.framework', true);
 JHtml::_('behavior.tooltip');
 JHtml::_('behavior.multiselect');
 FMHelper::_('include.core');
@@ -25,7 +26,7 @@ $doc 	= JFactory::getDocument();
 $uri 	= JFactory::getURI() ;
 $user	= JFactory::getUser();
 $userId	= $user->get('id');
-
+$params = $this->state->get('params') ;
 
 
 // List Control
@@ -74,10 +75,22 @@ if( JVERSION >= 3 ) {
 	<?php endif;?>
 	
 		<fieldset id="filter-bar">
-			<div class="filter-search fltlft ">
+			<div class="filter-search fltlft pull-left">
 				<label class="import-num-lbl pull-left" for="import_num"><?php echo JText::_('COM_FBIMPORTER_CACHE_NUM') ; ?></label>
 				<?php echo JHtml::_('select.integerlist', 50, 1000, 50 , 'import_num', array('onchange'=>"Joomla.submitbutton('items.refresh');", 'class' => 'pull-left'), $this->state->get('import_num') ); ?>
 				
+			</div>
+			
+			<div class="filter-search fltlft pull-left">
+				<label class="import-num-lbl pull-left" for="import_num"><?php echo JText::_('COM_FBIMPORTER_COMBINED_SAMPLE') ; ?></label>
+				<?php
+				$options = array();
+				
+				$options = JHtml::_('select.options', $this->formats, 'a_id', 'a_title', $params->get('combined_sample', 2)) ;
+				?>
+				<select name="combined_sample" id="combined_sample">
+					<?php echo $options; ?>
+				</select>
 			</div>
 			
 			<!--<div class="filter-select fltrt">
@@ -93,7 +106,7 @@ if( JVERSION >= 3 ) {
 			<thead>
 				<tr>
 					<th width="1%">
-						<input type="checkbox" name="checkall-toggle" value="" onclick="checkAll(this)" />
+						<input type="checkbox" name="checkall-toggle" value="" onclick="Joomla.checkAll(this)" />
 					</th>
 					<th width="3%"><?php echo JText::_('COM_FBIMPORTER_IMAGE') ; ?></th>
 					<th width="10%"><?php echo JText::_('COM_FBIMPORTER_TIME') ; ?></th>
@@ -113,7 +126,7 @@ if( JVERSION >= 3 ) {
 			<?php
 			$db = JFactory::getDbo();
 			$q = $db->getQuery(true) ;
-			$params = $this->state->get('params') ;
+			
 			$i = 0 ;
 			
 			$format_form = null ;

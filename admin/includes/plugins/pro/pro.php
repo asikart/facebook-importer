@@ -37,14 +37,7 @@ class plgFbimporterPro extends JPlugin
 	
 	public function onAKToolbarAppendButton($context, $args = array())
 	{
-		switch($context){
-			case 'preferences' :
-				$args[] = 550 ;
-				$args[] = 875 ;
-				$args[] = 'JToolbar_Options' ;
-				$args[] = 'administrator/components/com_fbimporter/includes/plugins/pro' ;
-				break;
-		}
+
 	}
 	
 	

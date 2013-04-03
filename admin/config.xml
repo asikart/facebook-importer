@@ -2,7 +2,6 @@
 <config>
 	<fieldset name="component"
 		label="COM_FBIMPORTER_BASIC_OPTION"
-		description="COM_FBIMPORTER_BASIC_OPTION_DESC"
 		addfieldpath="administrator/components/com_fbimporter/models/fields"
 	>
 
@@ -20,6 +19,7 @@
              default="1"
              label="COM_FBIMPORTER_FIRST_LINE_TO_TITLE"
              description="COM_FBIMPORTER_FIRST_LINE_TO_TITLE_DESC"
+			 class="btn-group"
         >
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
@@ -53,6 +53,7 @@
              default="0"
              label="COM_FBIMPORTER_CATEGORY_NOT_MATCH_CONTINUE"
              description="COM_FBIMPORTER_CATEGORY_NOT_MATCH_CONTINUE_DESC"
+			 class="btn-group"
         >
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
@@ -63,6 +64,7 @@
              default="1"
              label="COM_FBIMPORTER_SELECT_CATEGORY_WHEN_EXISTS"
              description="COM_FBIMPORTER_SELECT_CATEGORY_WHEN_EXISTS_DESC"
+			 class="btn-group"
         >
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
@@ -77,34 +79,6 @@
 			<option>COM_FBIMPORTER_CAGORY_TYPE_BE_DEFAULT</option>
 		</field>
 		
-		<field name="format"
-             type="format"
-             default="1"
-             label="COM_FBIMPORTER_FORMAT"
-             description="COM_FBIMPORTER_FORMAT_DESC"
-			 disabled="true"
-        />
-		
-		<field name="can_select_format"
-             type="radio"
-             default="1"
-             label="COM_FBIMPORTER_CAN_SELECT_FORMAT"
-             description="COM_FBIMPORTER_CAN_SELECT_FORMAT_DESC"
-        >
-			<option disabled="true" value="0">JNO</option>
-			<option disabled="true" value="1">JYES</option>
-		</field>
-		
-		<field name="sort_by_current"
-             type="radio"
-             default="0"
-             label="COM_FBIMPORTER_SORT_BY_CURRENT"
-             description="COM_FBIMPORTER_SORT_BY_CURRENT_DESC"
-        >
-			<option value="0">JNO</option>
-			<option value="1">JYES</option>
-		</field>
-		
 		<field type="spacer" hr="true" />
 		
 		<field name="image_width"
@@ -113,6 +87,58 @@
              label="COM_FBIMPORTER_IMAGE_WIDTH"
              description="COM_FBIMPORTER_IMAGE_WIDTH_DESC"
         />
+		
+	</fieldset>
+	
+	
+	<fieldset name="format"
+		label="COM_FBIMPORTER_FORMAT_OPTION"
+		addfieldpath="administrator/components/com_fbimporter/models/fields"
+	>
+		<field name="format"
+             type="format"
+             default="1"
+             label="COM_FBIMPORTER_FORMAT"
+             description="COM_FBIMPORTER_FORMAT_DESC"
+        />
+		
+		<field name="can_select_format"
+             type="radio"
+             default="1"
+             label="COM_FBIMPORTER_CAN_SELECT_FORMAT"
+             description="COM_FBIMPORTER_CAN_SELECT_FORMAT_DESC"
+			 class="btn-group"
+        >
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
+		<field type="spacer" hr="true" />
+		
+		<field name="combined_article_title"
+             type="text"
+             default="A Combined Article"
+             label="COM_FBIMPORTER_COMBINED_ARTICLE_TITLE"
+             description="COM_FBIMPORTER_COMBINED_ARTICLE_TITLE_DESC"
+        />
+		
+		<field name="combined_sample"
+             type="format"
+             default="2"
+             label="COM_FBIMPORTER_COMBINED_SAMPLE"
+             description="COM_FBIMPORTER_COMBINED_SAMPLE_DESC"
+        />
+		
+		<field name="sort_by_current"
+             type="radio"
+             default="0"
+             label="COM_FBIMPORTER_SORT_BY_CURRENT"
+             description="COM_FBIMPORTER_SORT_BY_CURRENT_DESC"
+			 class="btn-group"
+        >
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
 
 	</fieldset>
 	

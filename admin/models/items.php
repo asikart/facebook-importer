@@ -314,4 +314,17 @@ class FbimporterModelItems extends JModelList
 		
 		return $cats ;
 	}
+	
+	
+	
+	/*
+	 * function getFormats
+	 * @param 
+	 */
+	
+	public function getFormats()
+	{
+		$model = JModelLegacy::getInstance('Formats', 'FbimporterModel', array('ignore_request' => true)) ;
+		return $model->getItems();
+	}
 }

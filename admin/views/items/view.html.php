@@ -32,7 +32,8 @@ class FbimporterViewItems extends AKViewList
 
 		//$this->pagination	= $this->get('Pagination');
 		$this->filter		= $this->get('Filter');
-
+		$this->formats		= $this->get('Formats');
+		
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
 			JError::raiseError(500, implode("\n", $errors));
