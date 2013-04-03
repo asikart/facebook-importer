@@ -261,16 +261,6 @@ if( JVERSION >= 3 ) {
 				<?php endif; ?>
 				
 				
-				<!-- Sub Title -->
-				<?php if( JVERSION >= 3 ): ?>
-				<div class="small">
-					<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape( $item->get('a_alias') ));?>
-				</div>
-				<?php else: ?>
-				<p class="smallsub">
-					<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape( $item->get('a_alias') ));?>
-				</p>
-				<?php endif; ?>
 				</div>
 				
 				

@@ -23,7 +23,7 @@
 			name="a.catid"
 			type="category"
 			default=""
-			extension="com_fbimporter"
+			extension="com_content"
 			onchange="this.form.submit();"
 			class="" 
 		>

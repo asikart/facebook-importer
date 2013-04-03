@@ -48,6 +48,20 @@ class FbimporterControllerItem extends JControllerForm
 		
 		$this->setRedirect( 'index.php?option=com_fbimporter&view=items' , $msg );
 	}
+	
+	
+	/*
+	 * function add
+	 * @param $arg
+	 */
+	
+	public function saveAsCombined() {
+		$model = $this->getModel() ;
+		$id = $model->saveAsCombined();
+		
+		$this->setRedirect( 'index.php?option=com_content&task=article.edit&id=' . $id );
+	}
+	
 		
 	protected function getRedirectToItemAppend($recordId = null, $urlVar = 'id')
 	{

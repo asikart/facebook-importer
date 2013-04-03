@@ -47,7 +47,7 @@ class FbimporterModelitem extends JModelLegacy
 		$items 	= JRequest::getVar('item') ;
 		$ids 	= JRequest::getVar('cid') ;
 		$table 	= JTable::getInstance('content') ;
-		$format = $this->getTable('format') ;
+		$format = $this->getTable('Format') ;
 		$this->params = JComponentHelper::getParams('com_fbimporter');
 		
 		// if sort by current, reverse ids
@@ -79,53 +79,16 @@ class FbimporterModelitem extends JModelLegacy
 				return false ;
 			}
 			
-			$sample_intro 	= $format->introtext ;
-			$sample_full 	= $format->fulltext ;
-			
-			// video type
-			$link 		= base64_decode($item['link']) ; 
-			$r 			= $this->handleVideoType($link) ;
-			$platform 	= $r['platform'] ;
-			$vid 		= $r['vid'] ;
-			
-			// handel message
-			$message = nl2br($item['message']) ;
-			$message = str_replace( "\n" , '' , $message );
-			$message = str_replace( "\r" , '' , $message );
-			$message = explode( '<br /><br />' , $message );
-			$intro	 = array_shift($message) ;
-			$full    = implode( '<br /><br />' , $message);
-			
-			// handle image
-			$uri 	= JFactory::getURI( base64_decode($item['picture']) ) ;
-			$width	= $this->params->get('image_width', 550) ;
-			$image 	= $uri->getVar('url');
-			
-			if(!$image){
-				$image = str_replace('_s.', '_n.', base64_decode($item['picture'])) ;
-			}
-			
-			$image = '<img src="'.$image.'" alt="'.$item['title'].'" style="max-width: '.$width.'px;" />' ;
-			
-			// set replaces
-			$replace['{TITLE}'] 		= $item['title'] ;
-			$replace['{VIDEO}'] 		= $vid ? "{{$platform}}$vid{/{$platform}}" : $vid ;
-			$replace['{INTRO_MESSAGE}'] = $this->addLink( $intro ) ;
-			$replace['{IMAGE}']			= $image ;
-			$replace['{LINK_URL}']		= $link ;
-			$replace['{FULL_MESSAGE}'] 	= $this->addLink( $full ) ;
-			$replace['{READMORE_LINK}'] = "http://www.facebook.com/".$this->params->get('fb_uid')."/posts/$id" ;
-			$replace['{LINK_NAME}']		= $item['name'] ;
-			$replace['{LIKES}']			= $item['likes'] ;
-			$replace['{CREATED_TIME}']	= $date->toSQL(true) ;
 			
 			// set article information
 			
 			
 			$table->title	  = $item['title'] ;
 			$table->catid	  = $item['catid'] ? $item['catid'] : $format->catid ;
-			$table->introtext = strtr( $sample_intro , $replace ) ;
-			$table->fulltext  = strtr( $sample_full , $replace ) ;
+			$table->introtext = $this->replaceText($item, $format->introtext) ;
+			$table->fulltext  = $this->replaceText($item, $format->fulltext) ;
+			//$table->introtext = strtr( $sample_intro , $replace ) ;
+			//$table->fulltext  = strtr( $sample_full , $replace ) ;
 			$table->created	  = $this->params->get('sort_by_current', 0) ? JFactory::getDate( 'now' , JFactory::getConfig()->get('offset') )->toSQL(true) : $date->toSQL(true) ;
 			$table->alias 	  = JFilterOutput::stringURLSafe($table->title . ' ' . $date->format('Y-m-d-H-i-s', true) ) ;
 			$table->state	  = $format->published ;
@@ -154,12 +117,14 @@ class FbimporterModelitem extends JModelLegacy
 	public function saveAsCombined() {
 		$items 	= JRequest::getVar('item') ;
 		$ids 	= JRequest::getVar('cid') ;
-		$table 	= JTable::getInstance('content') ;
-		$sample = Akmanager::get('animapp.fb_import_sample_weekly') ;
+		$format = $this->getTable('Format') ;
+		$table 	= JTable::getInstance('Content') ;
+		$sample = JRequest::getVar('combined_sample', 3) ;
+		$this->params = JComponentHelper::getParams('com_fbimporter');
 		
-		$table->load($sample) ;
-		$sample_intro 	= $table->introtext ;
-		$sample_full 	= $table->fulltext ;
+		$format->load($sample) ;
+		$sample_intro 	= $format->introtext ;
+		$sample_full 	= $format->fulltext ;
 		
 		krsort($ids);
 		$posts = array();
@@ -168,20 +133,9 @@ class FbimporterModelitem extends JModelLegacy
 			// get item
 			$item = $items[$id] ;
 			
-			// set video
-			$link 		= base64_decode($item['link']) ;
-			$r 			= $this->handleVideoType($link) ;
-			$platform 	= $r['platform'] ;
-			$vid 		= $r['vid'] ;
 			
-			$replace['{WEEKLY_TITLE}'] 		= $item['title'] ;
-			$replace['{WEEKLY_LIKE_LINK}'] 	= "http://www.facebook.com/animapp/posts/$id" ;
-			$replace['{WEEKLY_LIKE}'] 		= $item['likes'] ;
-			$replace['{WEEKLY_MESSAGE}'] 	= $this->addLink( nl2br($item['message']) );
-			$replace['{WEEKLY_VIDEO}'] 		= "{{$platform}}$vid{/{$platform}}" ;
-			$replace['{WEEKLY_LINK_NAME}']	= $item['name'] ;
 			
-			$posts[] = strtr($sample_full , $replace );
+			$posts[] = $this->replaceText( $item, $sample_full ) ;
 		endforeach;
 		
 		// reset article
@@ -190,8 +144,8 @@ class FbimporterModelitem extends JModelLegacy
 		$table->published_up 	= null ;
 		$table->published_down 	= null ;
 		
-		$table->title	  = 'AnimApp 一週精選 00/00 ~ 00/00' ;
-		$table->alias 	  = JFilterOutput::stringURLSafe('animapp-weekly-videos-' . uniqid() ) ;
+		$table->title	  = 'A Combined Article' ;
+		$table->alias 	  = JFilterOutput::stringURLSafe('content-from-facebook-' . uniqid() ) ;
 		$table->introtext = $sample_intro ;
 		$table->fulltext  = implode( "\n" , $posts ) ;
 		$table->state	  = 0 ;
@@ -202,6 +156,60 @@ class FbimporterModelitem extends JModelLegacy
 		
 		return $table->id ;
 	}
+	
+	
+	/*
+	 * function replaceText
+	 * @param $text
+	 */
+	
+	public function replaceText($item, $text)
+	{
+		$date = JFactory::getDate( 'now' , JFactory::getConfig()->get('offset') ) ;
+		
+		// video type
+		$link 		= base64_decode($item['link']) ; 
+		$r 			= $this->handleVideoType($link) ;
+		$platform 	= $r['platform'] ;
+		$vid 		= $r['vid'] ;
+		
+		// handel message
+		$message = nl2br($item['message']) ;
+		$message = str_replace( "\n" , '' , $message );
+		$message = str_replace( "\r" , '' , $message );
+		$message = explode( '<br /><br />' , $message );
+		$intro	 = array_shift($message) ;
+		$full    = implode( '<br /><br />' , $message);
+		
+		// handle image
+		$uri 	= JFactory::getURI( base64_decode($item['picture']) ) ;
+		$width	= $this->params->get('image_width', 550) ;
+		$image 	= $uri->getVar('url');
+		
+		if(!$image){
+			$image = str_replace('_s.', '_n.', base64_decode($item['picture'])) ;
+		}
+		
+		$width = $width ? $width.'px' : '' ;
+		$image = '<img src="'.$image.'" alt="'.$item['title'].'" style="max-width: '.$width.';" />' ;
+		
+		// set replaces
+		$replace['{TITLE}'] 		= $item['title'] ;
+		$replace['{VIDEO}'] 		= $vid ? "{{$platform}}$vid{/{$platform}}" : $vid ;
+		$replace['{INTRO_MESSAGE}'] = $this->addLink( $intro ) ;
+		$replace['{IMAGE}']			= $image ;
+		$replace['{LINK_URL}']		= $link ;
+		$replace['{FULL_MESSAGE}'] 	= $this->addLink( $full ) ;
+		$replace['{READMORE_LINK}'] = "http://www.facebook.com/".$this->params->get('fb_uid')."/posts/$id" ;
+		$replace['{LINK_NAME}']		= $item['name'] ;
+		$replace['{LIKES}']			= $item['likes'] ;
+		$replace['{CREATED_TIME}']	= $date->toSQL(true) ;
+		
+		$text = strtr($text, $replace) ;
+		
+		return $text ;
+	}
+	
 	
 	
 	/*
