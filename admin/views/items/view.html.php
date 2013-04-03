@@ -39,8 +39,7 @@ class FbimporterViewItems extends AKViewList
 			return false;
 		}
 
-		$this->addToolbar();
-		parent::display($tpl);
+		parent::displayWithPanel($tpl);
 	}
 
 	/**
