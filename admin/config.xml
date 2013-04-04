@@ -169,7 +169,7 @@
              type="text"
              default=""
              label="COM_FBIMPORTER_APP_ID"
-             description="COM_FBIMPORTER_IMAGE_WIDTH_DESC"
+             description="COM_FBIMPORTER_APP_ID_DESC"
 			 size="40"
         />
 		
