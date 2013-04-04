@@ -233,7 +233,9 @@ if( JVERSION >= 3 ) {
 							echo trim($item->message) ;
 						?></textarea>
 						<?php else: ?>
-							<?php echo trim($item->message); ?>
+							<div style="max-height: 200px; overflow: auto;">
+								<?php echo trim($item->message); ?>
+							</div>
 						<?php endif; ?>
 						<input type="hidden" name="item[<?php echo $item->id; ?>][type]" 	value="<?php echo $item->get('type'); ?>" />
 						<input type="hidden" name="item[<?php echo $item->id; ?>][name]" 	value="<?php echo $item->get('name'); ?>" />
