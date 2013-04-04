@@ -85,14 +85,20 @@ class FbimporterViewItems extends AKViewList
 	{
 		AKHelper::_('ui.modal', 'saveAsCombinedModal') ;
 		$bar 	= JToolbar::getInstance('toolbar');
-		$title  = JText::_($title);
+		
 		
 		$option = array(
-			'class' => 'btn btn-small btn-success' ,
+			'class' => 'btn btn-small btn-success toolbar' ,
 			'icon' 	=> 'icon-new icon-white'
 		);
 		
-		$dhtml	= AKHelper::_('ui.modalLink', JText::_('COM_FBIMPORTER_IMPORT_AS_COMBINED'), 'saveAsCombinedModal', $option) ;
-		$bar->appendButton('Custom', $dhtml, 'batch');	
+		if(JVERSION >= 3) {
+			$title = JText::_('COM_FBIMPORTER_IMPORT_AS_COMBINED') ;
+		}else{
+			$title = '<span class="icon-32-new"></span>' . JText::_('COM_FBIMPORTER_IMPORT_AS_COMBINED')  ;
+		}
+		
+		$dhtml	= AKHelper::_('ui.modalLink', $title, 'saveAsCombinedModal', $option) ;
+		$bar->appendButton('Custom', $dhtml, 'new');
 	}
 }
