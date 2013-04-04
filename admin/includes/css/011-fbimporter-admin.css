@@ -1,0 +1,53 @@
+/*!
+ * com_fbimporter
+ *
+ * Copyright 2012 Asikart.com
+ * License GNU General Public License version 2 or later; see LICENSE.txt, see LICENSE.php
+ *
+ * Generator: AKHelper
+ * Author: Asika
+ */
+
+
+/* GLOBAL */
+
+
+/* BODY */
+
+
+/* TYPO */
+
+
+/* LAYOUT */
+
+
+/* CONTENT */
+
+
+/* FILTER */
+
+
+/* TABLE */
+
+
+/* FORM */
+.joomla25 .control-group .controls span {
+	padding: 5px 0;
+	display: block;
+}
+
+/* FOOTER */
+
+
+/* MODAL */
+.joomla30 .modal,
+.joomla30 .modal-body {
+	overflow: visible;
+	overflow-y: visible ;
+	overflow-x: visible ;
+}
+
+.joomla25 .modal-submit-import {
+	font-size: 150% ;
+	padding: 5px 15px;
+}
