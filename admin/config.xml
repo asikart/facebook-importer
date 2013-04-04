@@ -81,6 +81,17 @@
 		
 		<field type="spacer" hr="true" />
 		
+		<field name="sort_by_current"
+             type="radio"
+             default="0"
+             label="COM_FBIMPORTER_SORT_BY_CURRENT"
+             description="COM_FBIMPORTER_SORT_BY_CURRENT_DESC"
+			 class="btn-group"
+        >
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
 		<field name="image_width"
              type="text"
              default="550"
@@ -129,15 +140,26 @@
              description="COM_FBIMPORTER_COMBINED_SAMPLE_DESC"
         />
 		
-		<field name="sort_by_current"
-             type="radio"
-             default="0"
-             label="COM_FBIMPORTER_SORT_BY_CURRENT"
-             description="COM_FBIMPORTER_SORT_BY_CURRENT_DESC"
+		<field name="combined_sort"
+             type="list"
+             default="created"
+             label="JGRID_HEADING_ORDERING"
+             description="JGRID_HEADING_ORDERING"
 			 class="btn-group"
         >
-			<option value="0">JNO</option>
-			<option value="1">JYES</option>
+			<option value="created">COM_FBIMPORTER_COMBINED_SORT_PUBLISHED</option>
+			<option value="likes">COM_FBIMPORTER_COMBINED_SORT_LIKED</option>
+		</field>
+		
+		<field name="combined_dir"
+             type="list"
+             default="created"
+             label="JFIELD_ORDERING_DESC"
+             description="JFIELD_ORDERING_DESC"
+			 class="btn-group"
+        >
+			<option value="desc">JGLOBAL_ORDER_DESCENDING</option>
+			<option value="asc">JGLOBAL_ORDER_ASCENDING</option>
 		</field>
 
 	</fieldset>

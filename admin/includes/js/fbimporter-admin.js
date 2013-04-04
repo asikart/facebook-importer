@@ -12,6 +12,20 @@
 var Fbimporter = (function(){
 	return {
 		
+		importCombined : function(form, modal){
+			var selects = $$('#saveAsCombinedModal select') ;
+			
+			selects.each( function(e, i){
+				var id = e.get('id') ;
+				var input = $$('#adminForm input[name=' + id + ']') ;
+				
+				input.set('value', e.get('value')) ;
+			});
+			
+			Joomla.submitform('item.saveASCombined') ;
+		}
+		
+		
 	}
 })();
 

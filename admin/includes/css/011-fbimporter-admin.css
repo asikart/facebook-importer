@@ -36,3 +36,10 @@
 /* FOOTER */
 
 
+/* MODAL */
+.joomla30 .modal,
+.joomla30 .modal-body {
+	overflow: visible;
+	overflow-y: visible ;
+	overflow-x: visible ;
+}

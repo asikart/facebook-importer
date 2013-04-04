@@ -63,7 +63,9 @@ class FbimporterViewItems extends AKViewList
 
 		if ($canDo->get('core.create')) {
 			JToolBarHelper::custom( 'item.saveAll' , 'new' , 'new' , 'COM_FBIMPORTER_IMPORT' , true ) ;
-			JToolBarHelper::custom( 'item.saveAsCombined' , 'new' , 'new' , 'COM_FBIMPORTER_IMPORT_AS_COMBINED' , true ) ;
+			// JToolBarHelper::custom( 'item.saveAsCombined' , 'new' , 'new' , 'COM_FBIMPORTER_IMPORT_AS_COMBINED' , true ) ;
+			// AKToolBarHelper::modal( 'COM_FBIMPORTER_IMPORT_AS_COMBINED', 'saveAsCombinedModal' ) ;
+			$this->addSaveAsCombinedButton('COM_FBIMPORTER_IMPORT_AS_COMBINED', 'saveAsCombinedModal' );
 			JToolBarHelper::divider();
 			JToolBarHelper::custom( 'items.refresh' , 'refresh' , 'refresh' , 'COM_FBIMPORTER_REFRESH' , false);
 		}
@@ -71,5 +73,26 @@ class FbimporterViewItems extends AKViewList
 		if ($canDo->get('core.admin')) {
 			AKToolBarHelper::preferences('com_fbimporter');
 		}
+	}
+	
+	
+	/*
+	 * function addSaveAsCombinedButton
+	 * @param 
+	 */
+	
+	public function addSaveAsCombinedButton()
+	{
+		AKHelper::_('ui.modal', 'saveAsCombinedModal') ;
+		$bar 	= JToolbar::getInstance('toolbar');
+		$title  = JText::_($title);
+		
+		$option = array(
+			'class' => 'btn btn-small btn-success' ,
+			'icon' 	=> 'icon-new icon-white'
+		);
+		
+		$dhtml	= AKHelper::_('ui.modalLink', JText::_('COM_FBIMPORTER_IMPORT_AS_COMBINED'), 'saveAsCombinedModal', $option) ;
+		$bar->appendButton('Custom', $dhtml, 'batch');	
 	}
 }

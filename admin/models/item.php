@@ -115,18 +115,45 @@ class FbimporterModelitem extends JModelLegacy
 	 */
 	
 	public function saveAsCombined() {
+		$this->params = JComponentHelper::getParams('com_fbimporter');
 		$items 	= JRequest::getVar('item') ;
-		$ids 	= JRequest::getVar('cid') ;
+		$cids 	= JRequest::getVar('cid') ;
 		$format = $this->getTable('Format') ;
 		$table 	= JTable::getInstance('Content') ;
-		$sample = JRequest::getVar('combined_sample', 3) ;
+		$sample = JRequest::getVar('combined_sample',  $this->params->get('combined_sample', 2) ) ;
 		$this->params = JComponentHelper::getParams('com_fbimporter');
 		
 		$format->load($sample) ;
+		
+		if(!$format){
+			$this->setError(JText::_('COM_FBIMPORTER_CANNOT_GET_IMPORT_FORMAT'));
+			return false ;
+		}
+		
+		$catid	= JRequest::getVar('combined_catid', $this->params->get('combined_catid', $format->catid)) ;
+		
 		$sample_intro 	= $format->introtext ;
 		$sample_full 	= $format->fulltext ;
 		
-		krsort($ids);
+		
+		
+		// Sort
+		// ========================================================================
+		$ids = array() ;
+		foreach( $cids as $cid ):
+			
+			$key = JRequest::getVar('combined_sort', $this->params->get('combined_sort', 'likes')) ;
+			$ids[ $items[$cid][$key] ] = $cid ;
+			
+		endforeach;
+		
+		if( JRequest::getVar('combined_dir', $this->params->get('combined_dir', 'desc')) == 'desc' ) {
+			ksort($ids) ;
+		}else{
+			krsort($ids);
+		}
+		
+		
 		$posts = array();
 		foreach( $ids as $id ):
 			
@@ -150,7 +177,7 @@ class FbimporterModelitem extends JModelLegacy
 		$table->fulltext  = implode( "\n" , $posts ) ;
 		$table->state	  = 0 ;
 		$table->hits 	  = 0 ;
-		$table->catid	  = $format->catid ;
+		$table->catid	  = $catid ;
 		$table->created_by= JFactory::getUser()->get('id') ;
 		
 		$table->store();
