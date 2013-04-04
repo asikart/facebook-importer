@@ -48,7 +48,7 @@ if( JVERSION >= 3 ) {
 	
 }
 ?>
-<div id="fbimporter-items" class="joomla30">
+<div id="fbimporter-items" class="<?php echo JVERSION >= 3 ? 'joomla30' : 'joomla25'; ?>">
 <form action="<?php echo JRoute::_('index.php?option=com_fbimporter&view=items'); ?>" method="post" name="adminForm" id="adminForm">
 
 	<?php if(!empty( $this->sidebar) && $app->isAdmin()): ?>
@@ -268,12 +268,16 @@ if( JVERSION >= 3 ) {
 <p align="center"><?php echo JText::_('COM_FBIMPORTER_COPY_RIGHT'); ?></p>
 
 
-<div id="saveAsCombinedModal" class="modal hide fade">
+<div id="saveAsCombinedModal" class="modal hide fade <?php echo JVERSION >= 3 ? 'joomla30' : 'joomla25'; ?>">
+	<?php if( JVERSION >= 3 ): ?>
 	<div class="modal-header">
 		<button type="button" role="presentation" class="close" data-dismiss="modal">x</button>
 		<h3><?php echo JText::_('COM_FBIMPORTER_IMPORT_AS_COMBINED');?></h3>
 	</div>
-	
+	<?php else: ?>
+	<fieldset class="adminform">
+		<legend><?php echo JText::_('COM_FBIMPORTER_IMPORT_AS_COMBINED');?></legend>
+	<?php endif; ?>
 	
 	<div class="modal-body form-horizontal">
 	
@@ -306,9 +310,9 @@ if( JVERSION >= 3 ) {
 			</div>
 		</div>
 		
-		
+		<?php if( JVERSION >= 3 ): ?>
 		<hr />
-		
+		<?php endif; ?>
 		
 		<div class="combined-sort control-group">
 			<label for="combined_sort" class="combined-sort-lbl control-label"><?php echo JText::_('JGRID_HEADING_ORDERING') ; ?></label>
@@ -348,13 +352,21 @@ if( JVERSION >= 3 ) {
 	
 	
 	<div class="modal-footer">
+		<?php if( JVERSION >= 3 ): ?>
 		<button class="btn" type="button" data-dismiss="modal">
 			<?php echo JText::_('JCANCEL'); ?>
 		</button>
-		<button class="btn btn-primary" type="submit" onclick="Fbimporter.importCombined('adminForm', 'saveAsCombinedModal');">
+		<?php endif; ?>
+		
+		<button class="btn btn-primary fltrt modal-submit-import" type="submit" onclick="Fbimporter.importCombined('adminForm', 'saveAsCombinedModal');">
 			<?php echo JText::_('JGLOBAL_BATCH_PROCESS'); ?>
 		</button>
 	</div>
+	
+	
+	<?php if( JVERSION < 3 ): ?>
+	</fieldset>
+	<?php endif; ?>
 </div>
 
 </div>
