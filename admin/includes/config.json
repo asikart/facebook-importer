@@ -1,7 +1,7 @@
 {
 	
 	"system": {
-		"debug" : true
+		"debug" : false
 	}
 	
 }

@@ -64,7 +64,7 @@ class FbimporterViewFormat extends AKViewItem
 	 */
 	protected function addToolbar()
 	{
-		AKToolBarHelper::title( 'Format' . ' ' . JText::_('COM_FBIMPORTER_TITLE_ITEM_EDIT'), 'article-add.png');
+		AKToolBarHelper::title( JText::_('COM_FBIMPORTER') .': '. JText::_('COM_FBIMPORTER_EDIT_IMPORT_FORMAT'), 'article-add.png');
 		
 		parent::addToolbar();
 	}

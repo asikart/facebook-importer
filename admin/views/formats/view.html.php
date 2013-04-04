@@ -67,7 +67,7 @@ class FbimporterViewFormats extends AKViewList
 	protected function addToolbar()
 	{
 		// Set title.
-		AKToolBarHelper::title( ucfirst($this->getName()) . ' ' . JText::_($this->text_prefix.'_TITLE_LIST'), 'article.png');
+		AKToolBarHelper::title( JText::_('COM_FBIMPORTER') .': '. JText::_('COM_FBIMPORTER_IMPORT_FORMAT_SETTING'), 'article.png');
 		
 		parent::addToolbar();
 	}
