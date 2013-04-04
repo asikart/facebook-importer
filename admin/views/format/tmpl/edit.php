@@ -25,6 +25,8 @@ JHtml::_('behavior.formvalidation');
 	}
 </script>
 
+<div class="<?php echo JVERSION >= 3 ? 'joomla30' : 'joomla25'; ?>">
+
 <form action="<?php echo JRoute::_( JFactory::getURI()->toString() ); ?>" method="post" name="adminForm" id="format-form" class="form-validate">
 	<div class="row-fluid">
 		<div class="<?php echo JVERSION < 3 ? 'width-60 fltlft' : 'span8'; ?>">
@@ -142,3 +144,5 @@ JHtml::_('behavior.formvalidation');
 	<?php echo JHtml::_('form.token'); ?>
 	<div class="clr"></div>
 </form>
+
+</div>

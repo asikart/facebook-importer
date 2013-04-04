@@ -31,7 +31,10 @@
 
 
 /* FORM */
-
+.joomla25 .control-group .controls span {
+	padding: 5px 0;
+	display: block;
+}
 
 /* FOOTER */
 
