@@ -179,11 +179,14 @@ if( JVERSION >= 3 ) {
 									$item->catid = $params->get('catid') ;
 								}
 								
+								$options = JHtml::_('category.options', 'com_content') ;
+								array_unshift($options, JHtml::_('select.option', '', JText::_('JOPTION_SELECT_CATEGORY')));
 								
 								echo JHtml::_(
-									'select.genericlist', JHtml::_('category.options', 'com_content'), "item[{$item->id}][catid]", 'class="inputbox"', 'value', 'text',
+									'select.genericlist', $options, "item[{$item->id}][catid]", 'class="inputbox"', 'value', 'text',
 									$item->catid
 								);
+								
 								?>
 								
 								
@@ -304,7 +307,7 @@ if( JVERSION >= 3 ) {
 				array_unshift($catOptions, JHtml::_('select.option', '', JText::_('COM_FBIMPORTER_CAGORY_TYPE_BE_DEFAULT'))) ;
 				echo JHtml::_(
 					'select.genericlist', $catOptions, "combined_catid", 'id="combined_catid" class="inputbox"', 'value', 'text',
-					$params->get('catid') 
+					$params->get('combined_catid') 
 				);	
 			?>
 			</div>

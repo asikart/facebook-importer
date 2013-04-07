@@ -140,6 +140,15 @@
              description="COM_FBIMPORTER_COMBINED_SAMPLE_DESC"
         />
 		
+		<field name="combined_catid"
+             type="category"
+             label="COM_FBIMPORTER_COMBINED_CATID"
+             description="COM_FBIMPORTER_COMBINED_CATID_DESC"
+			 extension="com_content"
+        >
+			<option>COM_FBIMPORTER_CAGORY_TYPE_BE_DEFAULT</option>
+		</field>
+		
 		<field name="combined_sort"
              type="list"
              default="created"
