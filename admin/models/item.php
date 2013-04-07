@@ -131,7 +131,7 @@ class FbimporterModelitem extends JModelLegacy
 		}
 		
 		$catid	= JRequest::getVar('combined_catid', $this->params->get('combined_catid', $format->catid)) ;
-		AK::show($format);jexit('Something Error~~~!');
+		
 		$sample_intro 	= $format->introtext ;
 		$sample_full 	= $format->fulltext ;
 		
