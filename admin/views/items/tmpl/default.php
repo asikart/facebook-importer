@@ -81,6 +81,20 @@ if( JVERSION >= 3 ) {
 				<label class="import-num-lbl pull-left" for="import_num"><?php echo JText::_('COM_FBIMPORTER_CACHE_NUM') ; ?></label>
 				<?php echo JHtml::_('select.integerlist', 50, 1000, 50 , 'import_num', array('onchange'=>"Joomla.submitbutton('items.refresh');", 'class' => 'pull-left'), $this->state->get('import_num') ); ?>
 				
+				<?php
+					$filterOptions = array();
+					$filterOptions[] = JHtml::_('select.option', '', JText::_('JALL')) ;
+					$filterOptions[] = JHtml::_('select.option', 'status', 'Status') ;
+					$filterOptions[] = JHtml::_('select.option', 'link', 'Link') ;
+					$filterOptions[] = JHtml::_('select.option', 'photo', 'Photo') ;
+					$filterOptions[] = JHtml::_('select.option', 'video', 'Video') ;
+					
+					$post_type = $app->getUserStateFromRequest('com_fbimporter.filter.post_type', 'post_type') ;
+					echo JHtml::_(
+					'select.genericlist', $filterOptions, "post_type", 'id="post_type" class="inputbox" onchange="this.form.submit();"', 'value', 'text',
+						$post_type
+					);	
+				?>
 			</div>
 			
 			<!--<div class="filter-select fltrt">
@@ -125,6 +139,8 @@ if( JVERSION >= 3 ) {
 			foreach ($this->items as $item ) :
 			
 				if( $item->continue ) continue ;
+				
+				if( $post_type && $item->type != $post_type ) continue;
 				
 				$likes = isset($item->likes->count) ? $item->likes->count : 0;
 				?>
@@ -219,27 +235,19 @@ if( JVERSION >= 3 ) {
 					
 					<!--TITLE-->
 					<td>
-						<?php if( $item->exists ): ?>
-							<h3><?php echo $item->title; ?></h3>
-						<?php else: ?>
-							<textarea type="text" name="item[<?php echo $item->id; ?>][title]" style="width:100%;height:100px;"><?php echo $item->get('title'); ?></textarea>
-						<?php endif; ?>
+						<textarea type="text" name="item[<?php echo $item->id; ?>][title]" style="width:100%;height:100px;"><?php echo $item->get('title'); ?></textarea>
 					</td>
 					
 					
 					<!--TEXT-->
 					<td>
-						<?php if( !$item->exists ): ?>
+
 						<textarea name="item[<?php echo $item->id; ?>][message]" style="width:100%;height:100px;"><?php
 							$item->message = str_replace( '<br />' , '' , $item->message ) ;
 							//$item->message = str_replace( "\t" , '1' , $item->message ) ;
 							echo trim($item->message) ;
 						?></textarea>
-						<?php else: ?>
-							<div style="max-height: 200px; overflow: auto;">
-								<?php echo trim($item->message); ?>
-							</div>
-						<?php endif; ?>
+
 						<input type="hidden" name="item[<?php echo $item->id; ?>][type]" 	value="<?php echo $item->get('type'); ?>" />
 						<input type="hidden" name="item[<?php echo $item->id; ?>][name]" 	value="<?php echo $item->get('name'); ?>" />
 						<input type="hidden" name="item[<?php echo $item->id; ?>][picture]" value="<?php echo base64_encode($item->get('picture')); ?>" />
