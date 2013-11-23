@@ -1,0 +1,3 @@
+# IDE & System Related Files #
+.*
+.DS_Store
