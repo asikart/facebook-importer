@@ -281,7 +281,9 @@ class FbimporterModelItems extends JModelList
 		$params = $this->getState('params');
 		$uid = $params->get('fb_uid', 'facebook');
 		
-		$r = $fb->api("/{$uid}/posts?limit=" . $limit );
+		$r = $fb->api("/{$uid}/posts?limit=" . $limit 
+		."&fields=id,from,to,message,message_tags,picture,link,icon,privacy,type,status_type,object_id,created_time,updated_time,"
+		."likes.limit(1).summary(true)" );
 		
 		JPath::setPermissions( $temp );
 		JFile::write( $temp , json_encode($r) );

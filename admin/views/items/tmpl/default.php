@@ -142,14 +142,14 @@ if( JVERSION >= 3 ) {
 				
 				if( $post_type && $item->type != $post_type ) continue;
 				
-				$likes = isset($item->likes->count) ? $item->likes->count : 0;
+				$likes = $item->likes->summary->total_count;
 				?>
 				<tr class="row<?php echo $i % 2; ?>">
 					
 					<!--CHECKBOX-->
 					<td class="center" style="padding: 0;">
 						<input style="width:100%; height:100%; <?php //echo $item->exists ? 'visibility: hidden ;' : null; ?>" type="checkbox" id="cb<?php echo $i; ?>" <?php //echo $item->exists ? 'disabled="true"' : null; ?>
-								name="cid[<?php echo $item->likes->count; ?>]" value="<?php echo $item->id; ?>" onclick="Joomla.isChecked(this.checked);" title="<?php echo JText::sprintf('COM_FBIMPORTER_ROW %s COM_FBIMPORTER_CHECKBOX', $i+1);?>" />
+								name="cid[]" value="<?php echo $item->id; ?>" onclick="Joomla.isChecked(this.checked);" title="<?php echo JText::sprintf('COM_FBIMPORTER_ROW %s COM_FBIMPORTER_CHECKBOX', $i+1);?>" />
 					</td>
 					
 					<!--IMAGE-->
