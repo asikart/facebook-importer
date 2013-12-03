@@ -143,26 +143,26 @@ class FbimporterModelitem extends JModelLegacy
 		foreach( $cids as $cid ):
 			
 			$key = JRequest::getVar('combined_sort', $this->params->get('combined_sort', 'likes')) ;
-			$ids[ $items[$cid][$key] ] = $cid ;
+			$ids[$cid] = $items[$cid][$key] ;
 			
 		endforeach;
 		
 		if( JRequest::getVar('combined_dir', $this->params->get('combined_dir', 'desc')) == 'desc' ) {
-			ksort($ids) ;
+			asort($ids) ;
 		}else{
-			krsort($ids);
+			arsort($ids);
 		}
 		
 		
 		$posts = array();
-		foreach( $ids as $id ):
+		foreach( $ids as $cid => $id ):
 			
 			// get item
-			$item = $items[$id] ;
+			$item = $items[$cid] ;
 			
+
 			
-			
-			$posts[] = $this->replaceText( $item, $sample_full ) ;
+			$posts[] = $this->replaceText( $item, $sample_full, $cid ) ;
 		endforeach;
 		
 		// reset article
@@ -191,7 +191,7 @@ class FbimporterModelitem extends JModelLegacy
 	 * @param $text
 	 */
 	
-	public function replaceText($item, $text)
+	public function replaceText($item, $text, $id)
 	{
 		$date = JFactory::getDate( 'now' , JFactory::getConfig()->get('offset') ) ;
 		

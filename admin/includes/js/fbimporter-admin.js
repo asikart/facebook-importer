@@ -13,11 +13,16 @@ var Fbimporter = (function(){
 	return {
 		
 		importCombined : function(form, modal){
-			var selects = $$('#saveAsCombinedModal select') ;
+			if ($$('#saveAsCombinedModal.joomla25')) {
+				var selects = $$('#sbox-content select') ;
+			}
+			else {
+				var selects = $$('#saveAsCombinedModal select') ;
+			}
 			
 			selects.each( function(e, i){
-				var id = e.get('id') ;
-				var input = $$('#adminForm input[name=' + id + ']') ;
+				var name = e.get('name') ;
+				var input = $$('#adminForm input[name=' + name + ']') ;
 				
 				input.set('value', e.get('value')) ;
 			});
@@ -25,7 +30,6 @@ var Fbimporter = (function(){
 			Joomla.submitform('item.saveASCombined') ;
 		}
 		
-		
-	}
+	};
 })();
 
