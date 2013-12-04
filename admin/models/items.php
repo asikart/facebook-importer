@@ -150,6 +150,8 @@ class FbimporterModelItems extends JModelList
 				$item->message = nl2br($item->message);
 				$item->message = explode( '<br />' , $item->message );
 				$item->title   = $title = array_shift($item->message);
+				$item->title   = str_ireplace('https://', '', $item->title);
+				$item->title   = str_ireplace('http://', '', $item->title);
 				
 				// set message and id
 				$item->message = implode( '<br />' , $item->message );
