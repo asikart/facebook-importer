@@ -57,6 +57,40 @@ class FbimporterModelitem extends JModelLegacy
 		}
 		*/
 		
+		$temp = JPATH_ROOT.'/cache/fb-importer-temp';
+		
+		$r = '' ;
+		
+		if( JFile::exists($temp) )
+			$r = JFile::read( $temp ) ;
+		$r = json_decode($r) ;
+		
+		if( isset($r->data) ){
+				
+			foreach( $r->data as $key => &$item ){
+			
+				$item = new JObject($item);
+
+				$item->id = explode( '_' , $item->id );
+				$item->id = $item->id[1] ;
+				
+				if (isset($items[$item->id])) {
+					$items[$item->id]['type'] = $item->type;
+					$items[$item->id]['name'] = isset($item->name) ? $item->name : '';
+					$items[$item->id]['picture'] = base64_encode(isset($item->picture) ? $item->picture : '');
+					$items[$item->id]['link'] = base64_encode(isset($item->link) ? $item->link : '');
+					$items[$item->id]['source'] = base64_encode(isset($item->source) ? $item->source : '');
+					$items[$item->id]['likes'] = $item->likes->summary->total_count;
+					$items[$item->id]['created'] = $item->created_time;
+				}
+				
+			}
+		}
+		else {
+			$this->setError(JText::_('COM_FBIMPORTER_CANNOT_GET_DATA'));
+			return false ;
+		}
+		
 		foreach( $ids as $id ):
 			// reset article
 			$table->id = null ;
@@ -135,6 +169,40 @@ class FbimporterModelitem extends JModelLegacy
 		$sample_intro 	= $format->introtext ;
 		$sample_full 	= $format->fulltext ;
 		
+		
+		$temp = JPATH_ROOT.'/cache/fb-importer-temp';
+		
+		$r = '' ;
+		
+		if( JFile::exists($temp) )
+			$r = JFile::read( $temp ) ;
+		$r = json_decode($r) ;
+		
+		if( isset($r->data) ){
+				
+			foreach( $r->data as $key => &$item ){
+			
+				$item = new JObject($item);
+
+				$item->id = explode( '_' , $item->id );
+				$item->id = $item->id[1] ;
+				
+				if (isset($items[$item->id])) {
+					$items[$item->id]['type'] = $item->type;
+					$items[$item->id]['name'] = isset($item->name) ? $item->name : '';
+					$items[$item->id]['picture'] = base64_encode(isset($item->picture) ? $item->picture : '');
+					$items[$item->id]['link'] = base64_encode(isset($item->link) ? $item->link : '');
+					$items[$item->id]['source'] = base64_encode(isset($item->source) ? $item->source : '');
+					$items[$item->id]['likes'] = $item->likes->summary->total_count;
+					$items[$item->id]['created'] = $item->created_time;
+				}
+				
+			}
+		}
+		else {
+			$this->setError(JText::_('COM_FBIMPORTER_CANNOT_GET_DATA'));
+			return false ;
+		}
 		
 		
 		// Sort

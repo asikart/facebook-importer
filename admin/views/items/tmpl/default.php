@@ -248,13 +248,6 @@ if( JVERSION >= 3 ) {
 							echo trim($item->message) ;
 						?></textarea>
 
-						<input type="hidden" name="item[<?php echo $item->id; ?>][type]" 	value="<?php echo $item->get('type'); ?>" />
-						<input type="hidden" name="item[<?php echo $item->id; ?>][name]" 	value="<?php echo $item->get('name'); ?>" />
-						<input type="hidden" name="item[<?php echo $item->id; ?>][picture]" value="<?php echo base64_encode($item->get('picture')); ?>" />
-						<input type="hidden" name="item[<?php echo $item->id; ?>][link]" 	value="<?php echo base64_encode($item->get('link')); ?>" />
-						<input type="hidden" name="item[<?php echo $item->id; ?>][source]" 	value="<?php echo base64_encode($item->get('source')); ?>" />
-						<input type="hidden" name="item[<?php echo $item->id; ?>][likes]" 	value="<?php echo $likes; ?>" />
-						<input type="hidden" name="item[<?php echo $item->id; ?>][created]" value="<?php echo $item->get('created_time'); ?>" />
 					</td>
 				</tr>
 				<?php $i++; ?>
