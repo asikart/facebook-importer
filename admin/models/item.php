@@ -236,7 +236,7 @@ class FbimporterModelitem extends JModelLegacy
 		}else{
 			arsort($ids);
 		}
-		
+
 		
 		$posts = array();
 		foreach( $ids as $cid => $id ):

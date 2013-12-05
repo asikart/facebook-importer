@@ -13,7 +13,7 @@ var Fbimporter = (function(){
 	return {
 		
 		importCombined : function(form, modal){
-			if ($('fbimporter-items').getElementById('sbox-content')) {
+			if ($('sbox-window')) {
 				var selects = $$('#sbox-content select') ;
 			}
 			else {
@@ -32,4 +32,3 @@ var Fbimporter = (function(){
 		
 	};
 })();
-
