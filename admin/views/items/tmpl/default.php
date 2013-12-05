@@ -142,7 +142,7 @@ if( JVERSION >= 3 ) {
 				
 				if( $post_type && $item->type != $post_type ) continue;
 				
-				$likes = $item->likes->summary->total_count;
+				$likes = isset($item->likes->summary->total_count)? $item->likes->summary->total_count : 0 ;
 				?>
 				<tr class="row<?php echo $i % 2; ?>">
 					

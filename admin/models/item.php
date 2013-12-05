@@ -57,7 +57,16 @@ class FbimporterModelitem extends JModelLegacy
 		}
 		*/
 		
-		$temp = JPATH_ROOT.'/cache/fb-importer-temp';
+		jimport('joomla.application.component.model');
+		if (JVERSION >= 3) {
+			JModelLegacy::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.'/models');
+			$model = JModelLegacy::getInstance( 'Items', 'FbimporterModel' );
+		} else {
+			JModel::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.'/models');
+			$model = JModel::getInstance( 'Items', 'FbimporterModel' );
+		}
+		
+		$temp = $model->temp;
 		
 		$r = '' ;
 		
@@ -80,7 +89,7 @@ class FbimporterModelitem extends JModelLegacy
 					$items[$item->id]['picture'] = base64_encode(isset($item->picture) ? $item->picture : '');
 					$items[$item->id]['link'] = base64_encode(isset($item->link) ? $item->link : '');
 					$items[$item->id]['source'] = base64_encode(isset($item->source) ? $item->source : '');
-					$items[$item->id]['likes'] = $item->likes->summary->total_count;
+					$items[$item->id]['likes'] = isset($item->likes->summary->total_count) ? $item->likes->summary->total_count : 0;
 					$items[$item->id]['created'] = $item->created_time;
 				}
 				
@@ -169,8 +178,16 @@ class FbimporterModelitem extends JModelLegacy
 		$sample_intro 	= $format->introtext ;
 		$sample_full 	= $format->fulltext ;
 		
+		jimport('joomla.application.component.model');
+		if (JVERSION >= 3) {
+			JModelLegacy::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.'/models');
+			$model = JModelLegacy::getInstance( 'Items', 'FbimporterModel' );
+		} else {
+			JModel::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.'/models');
+			$model = JModel::getInstance( 'Items', 'FbimporterModel' );
+		}
 		
-		$temp = JPATH_ROOT.'/cache/fb-importer-temp';
+		$temp = $model->temp;
 		
 		$r = '' ;
 		
@@ -193,7 +210,7 @@ class FbimporterModelitem extends JModelLegacy
 					$items[$item->id]['picture'] = base64_encode(isset($item->picture) ? $item->picture : '');
 					$items[$item->id]['link'] = base64_encode(isset($item->link) ? $item->link : '');
 					$items[$item->id]['source'] = base64_encode(isset($item->source) ? $item->source : '');
-					$items[$item->id]['likes'] = $item->likes->summary->total_count;
+					$items[$item->id]['likes'] = isset($item->likes->summary->total_count) ? $item->likes->summary->total_count : 0;
 					$items[$item->id]['created'] = $item->created_time;
 				}
 				
@@ -204,13 +221,12 @@ class FbimporterModelitem extends JModelLegacy
 			return false ;
 		}
 		
-		
 		// Sort
 		// ========================================================================
 		$ids = array() ;
+		$key = JRequest::getVar('combined_sort', $this->params->get('combined_sort', 'likes')) ;
 		foreach( $cids as $cid ):
 			
-			$key = JRequest::getVar('combined_sort', $this->params->get('combined_sort', 'likes')) ;
 			$ids[$cid] = $items[$cid][$key] ;
 			
 		endforeach;

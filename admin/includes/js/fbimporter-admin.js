@@ -13,7 +13,7 @@ var Fbimporter = (function(){
 	return {
 		
 		importCombined : function(form, modal){
-			if ($$('#saveAsCombinedModal.joomla25')) {
+			if ($('fbimporter-items').getElementById('sbox-content')) {
 				var selects = $$('#sbox-content select') ;
 			}
 			else {
