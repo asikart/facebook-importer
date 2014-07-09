@@ -48,7 +48,7 @@
 			/>
 
 		<field
-			name="format.state"
+			name="format.published"
 			type="list"
 			label="JSTATUS"
 			default=""
@@ -58,7 +58,6 @@
 			<option>JOPTION_SELECT_PUBLISHED</option>
 			<option value="1">JPUBLISHED</option>
 			<option value="0">JUNPUBLISHED</option>
-			<option value="-2">JTRASHED</option>
 			<option value="*">JALL</option>
 		</field>
 
@@ -67,7 +66,7 @@
 			type="category"
 			default=""
 			label="JCATEGORY"
-			extension="com_fbimporter"
+			extension="com_content"
 			onchange="this.form.submit();"
 			>
 			<option></option>
@@ -85,24 +84,6 @@
 			default="a.title ASC"
 			>
 			<option value="">JGLOBAL_SORT_BY</option>
-			<option value="format.catid, format.ordering ASC">JGRID_HEADING_ORDERING_ASC</option>
-			<option value="format.catid, format.ordering DESC">JGRID_HEADING_ORDERING_DESC</option>
-			<option value="format.state ASC">JSTATUS_ASC</option>
-			<option value="format.state DESC">JSTATUS_DESC</option>
-			<option value="format.title ASC">JGLOBAL_TITLE_ASC</option>
-			<option value="format.title DESC">JGLOBAL_TITLE_DESC</option>
-			<option value="category.title ASC">JCATEGORY_ASC</option>
-			<option value="category.title DESC">JCATEGORY_DESC</option>
-			<option value="format.access ASC">JGRID_HEADING_ACCESS_ASC</option>
-			<option value="format.access DESC">JGRID_HEADING_ACCESS_DESC</option>
-			<option value="format.created_by ASC">JAUTHOR_ASC</option>
-			<option value="format.created_by DESC">JAUTHOR_DESC</option>
-			<option value="format.language ASC">JGRID_HEADING_LANGUAGE_ASC</option>
-			<option value="format.language DESC">JGRID_HEADING_LANGUAGE_DESC</option>
-			<option value="format.created ASC">JDATE_ASC</option>
-			<option value="format.created DESC">JDATE_DESC</option>
-			<option value="format.id ASC">JGRID_HEADING_ID_ASC</option>
-			<option value="format.id DESC">JGRID_HEADING_ID_DESC</option>
 		</field>
 
 		<field

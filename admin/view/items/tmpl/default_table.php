@@ -162,7 +162,7 @@ $asset->addJs('fbimporter.js');
 					<?php endif; ?>
 
 					<!--FORMAT-->
-					<?php if ($params->get('can_select_format', 0) && $format_form): ?>
+					<?php if ($params->get('can_select_format', 1) && $format_form): ?>
 						<br />
 						<br />
 						<?php echo JText::_('COM_FBIMPORTER_CHOOSE_FORMAT'); ?>：
