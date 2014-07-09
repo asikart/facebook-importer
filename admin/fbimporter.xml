@@ -3,24 +3,22 @@
 	version="3.2"
 	method="upgrade">
 	<name>com_fbimporter</name>
-	<creationDate>2014-1-11</creationDate>
-	<copyright>Copyright (C) 2014. All rights reserved.</copyright>
+	<creationDate>2012-09-01</creationDate>
+	<copyright>Copyright (C) 2012. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<author>Asika</author>
 	<authorEmail>asika32764@gmail.com</authorEmail>
 	<authorUrl>http://asikart.com</authorUrl>
-	<version>1.0.0</version>
-	<description>COM_FBIMPORTER_XML_DESCRIPTION</description>
+	<version>2.0.0</version>
+	<description></description>
 
 	<scriptfile>install.php</scriptfile>
 
-	<!-- do not re install sql when generator working.
 	<install>
 		<sql>
 			<file driver="mysql" charset="utf8">sql/install.sql</file>
 		  </sql>
 	</install>
-	-->
 
 	<uninstall>
 		<sql>
