@@ -139,7 +139,7 @@ class FbimporterViewItemsHtml extends GridView
 		$buttonSet['import_per_item'] = array(
 			'handler' => function()
 				{
-					JToolBarHelper::custom( 'item.saveAll' , 'new' , 'new' , 'COM_FBIMPORTER_IMPORT' , true );
+					JToolBarHelper::custom( 'item.saveall' , 'new' , 'new' , 'COM_FBIMPORTER_IMPORT' , true );
 				},
 			'access' => 'core.create',
 			'priority' => 1000

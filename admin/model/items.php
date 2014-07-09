@@ -82,7 +82,7 @@ class FbimporterModelItems extends ListModel
 	{
 		parent::__construct($config, $container, $state, $db);
 
-		$this->temp = JPATH_CACHE . '/fb-importer-temp';
+		$this->temp = \Fbimporter\Helper\TempHelper::getPath();
 
 		$this->params = JComponentHelper::getParams('com_fbimporter');
 	}
