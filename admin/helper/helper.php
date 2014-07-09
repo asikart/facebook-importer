@@ -25,30 +25,17 @@ abstract class FbimporterHelper
 	 */
 	public static function addSubmenu($vName)
 	{
-		$app       = \JFactory::getApplication();
-		$inflector = \JStringInflector::getInstance(true);
+		JHtmlSidebar::addEntry(
+			JText::_('COM_FBIMPORTER_TOOL'),
+			'index.php?option=com_fbimporter&view=items',
+			($vName == 'items')
+		);
 
-		// Add Category Menu Item
-		if ($app->isAdmin())
-		{
-			JHtmlSidebar::addEntry(
-				JText::_('JCATEGORY'),
-				'index.php?option=com_categories&extension=com_fbimporter',
-				($vName == 'categories')
-			);
-		}
-
-		foreach (new \DirectoryIterator(JPATH_ADMINISTRATOR . '/components/com_fbimporter/view') as $folder)
-		{
-			if ($folder->isDir() && $inflector->isPlural($view = $folder->getBasename()))
-			{
-				JHtmlSidebar::addEntry(
-					JText::sprintf(sprintf('COM_FBIMPORTER_%s_TITLE_LIST', strtoupper($folder))),
-					'index.php?option=com_fbimporter&view=' . $view,
-					($vName == $view)
-				);
-			}
-		}
+		JHtmlSidebar::addEntry(
+			JText::_('COM_FBIMPORTER_FORMAT_SETTING'),
+			'index.php?option=com_fbimporter&view=formats',
+			($vName == 'formats')
+		);
 
 		$dispatcher = \JEventDispatcher::getInstance();
 		$dispatcher->trigger('onAfterAddSubmenu', array('com_fbimporter', $vName));
