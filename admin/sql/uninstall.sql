@@ -1,1 +1,1 @@
-DROP TABLE  `#__fbimporter_formats`;
+DROP TABLE  `#__fbimporter_formats`

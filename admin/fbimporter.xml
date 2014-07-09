@@ -22,42 +22,12 @@
 
 	<uninstall>
 		<sql>
-			<file driver="mysql"
-				charset="utf8">sql/uninstall.sql
-			</file>
+			<file driver="mysql" charset="utf8">sql/uninstall.sql</file>
 		</sql>
 	</uninstall>
 
-	<files folder="../site">
-		<folder>asset</folder>
-		<folder>controller</folder>
-		<folder>helper</folder>
-		<folder>images</folder>
-		<folder>model</folder>
-		<folder>view</folder>
-		<filename>component.php</filename>
-		<filename>fbimporter.php</filename>
-		<filename>index.html</filename>
-		<filename>router.php</filename>.
-		<filename>routing.json</filename>
-	</files>
-
 	<administration>
 		<menu>COM_FBIMPORTER</menu>
-
-		<!-- Submenu
-			Note that all & must be escaped to &amp; for the file to be valid
-			XML and be parsed by the installer
-		<submenu>
-
-			<menu link="option=com_fbimporter&amp;view=formats"
-				view="formats">com_fbimporter_formats
-			</menu>
-			<menu link="option=com_categories&amp;extension=com_fbimporter"
-				view="categories">jcategories
-			</menu>
-		</submenu>
-		-->
 
 		<files folder="admin">
 			<folder>asset</folder>
