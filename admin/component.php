@@ -21,7 +21,7 @@ final class FbimporterComponent extends \Fbimporter\Component\FbimporterComponen
 	 *
 	 * @var string
 	 */
-	protected $defaultController = 'formats.display';
+	protected $defaultController = 'items.display';
 
 	/**
 	 * Prepare hook of this component.
