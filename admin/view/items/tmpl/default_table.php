@@ -83,8 +83,7 @@ $params = $data->params;
 
 	$i = 0;
 
-	$format_form = null;
-	$app->triggerEvent('onGetFormatForm', array('com_fbimporter.items', &$format_form));
+	$format_form = $data->format_form;
 
 	foreach ($data->items as $item) :
 
@@ -159,25 +158,17 @@ $params = $data->params;
 							'select.genericlist', $options, "item[{$item->id}][catid]", 'class="inputbox"', 'value', 'text',
 							$item->catid
 						);
-
 						?>
 
-
 						<?php if ($item->cat_matched): ?>
-							<?php if (JVERSION >= 3): ?>
 								<span class="label label-info"><?php echo JText::_('COM_FBIMPORTER_CATEGORY_AUTO_MATCHED'); ?></span>
-							<?php else: ?>
-								<span style="color:blue;">(<?php echo JText::_('COM_FBIMPORTER_CATEGORY_AUTO_MATCHED'); ?>)</span>
-							<?php endif; ?>
 						<?php endif; ?>
 					<?php endif; ?>
 
 					<!--FORMAT-->
-					<?php if ($params->get('can_select_format', 0) && $format_form && FbimporterHelper::_('plugin.get', 'pro')): ?>
-
+					<?php if ($params->get('can_select_format', 0) && $format_form): ?>
 						<br />
 						<br />
-						<hr />
 						<?php echo JText::_('COM_FBIMPORTER_CHOOSE_FORMAT'); ?>：
 						<?php
 						$format_form->name = "item[{$item->id}][format]";

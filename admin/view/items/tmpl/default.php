@@ -37,18 +37,25 @@ $container = $this->getContainer();
 		<div id="j-main-container">
 		<?php endif;?>
 
-			<?php // echo with(new FileLayout('joomla.searchtools.default'))->render(array('view' => $this->data)); ?>
-
 			<?php echo $this->loadTemplate('table'); ?>
-
-			<?php // echo with(new FileLayout('joomla.batchtools.modal'))->render(array('view' => $this->data, 'task_prefix' => 'items.')); ?>
 
 			<!-- Hidden Inputs -->
 			<div id="hidden-inputs">
+
+				<input type="hidden" name="combined_sample" value="" />
+				<input type="hidden" name="combined_catid" value="" />
+				<input type="hidden" name="combined_sort" value="" />
+				<input type="hidden" name="combined_dir" value="" />
+
 				<input type="hidden" name="task" value="" />
 				<input type="hidden" name="boxchecked" value="0" />
 				<?php echo JHtml::_('form.token'); ?>
 			</div>
+
+			<p></p>
+			<p align="center"><?php echo JText::_('COM_FBIMPORTER_COPY_RIGHT'); ?></p>
+
+			<?php echo $this->loadTemplate('import_modal'); ?>
 
 		</div>
 	</form>

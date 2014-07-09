@@ -83,6 +83,8 @@ class FbimporterModelItems extends ListModel
 		parent::__construct($config, $container, $state, $db);
 
 		$this->temp = JPATH_CACHE . '/fb-importer-temp';
+
+		$this->params = JComponentHelper::getParams('com_fbimporter');
 	}
 
 	/**
@@ -95,7 +97,7 @@ class FbimporterModelItems extends ListModel
 		JLoader::register('Facebook', FBIMPORTER_ADMIN . '/src/Facebook/facebook.php');
 
 		$temp   = $this->temp;
-		$params = JComponentHelper::getParams('com_fbimporter');
+		$params = $this->getParams();
 
 		$config = array();
 
@@ -128,7 +130,7 @@ class FbimporterModelItems extends ListModel
 	{
 		$db         = JFactory::getDbo();
 		$q          = $db->getQuery(true);
-		$params     = JComponentHelper::getParams('com_fbimporter');
+		$params     = $this->getParams();
 		$temp       = $this->temp;
 		$categories = $this->getCategories();
 
@@ -314,6 +316,17 @@ class FbimporterModelItems extends ListModel
 		}
 
 		return $this->formats;
+	}
+
+	public function getFormatForm()
+	{
+		JLoader::register('JFormFieldFormat', FBIMPORTER_ADMIN . '/model/field/format.php');
+
+		// Get format form
+		$format_form = new JFormFieldFormat;
+		$format_form->value = $this->getParams()->get('format');
+
+		return $format_form;
 	}
 
 	/**

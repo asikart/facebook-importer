@@ -106,6 +106,8 @@ class FbimporterViewItemsHtml extends GridView
 	{
 		$data = $this->data;
 
+		$data->formats = $this->get('Formats');
+		$data->format_form = $this->get('FormatForm');
 		$data->params = \Windwalker\System\ExtensionHelper::getParams('com_fbimporter');
 	}
 
