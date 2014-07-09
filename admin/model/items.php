@@ -86,6 +86,40 @@ class FbimporterModelItems extends ListModel
 	}
 
 	/**
+	 * refresh
+	 *
+	 * @return  void
+	 */
+	public function refresh()
+	{
+		JLoader::register('Facebook', FBIMPORTER_ADMIN . '/src/Facebook/facebook.php');
+
+		$temp   = $this->temp;
+		$params = JComponentHelper::getParams('com_fbimporter');
+
+		$config = array();
+
+		$config['appId']  = $params->get('app_id', '420381114686923');
+		$config['secret'] = $params->get('secret', 'e5fcb4294864136013ae747090b07778');
+
+		$fb = new Facebook($config);
+
+		$limit = $this->state->get('import_num', 50);
+		$uid = $params->get('fb_uid', 'facebook');
+
+		$r = $fb->api(
+			"/{$uid}/posts?limit=" . $limit
+			. "&fields=id,from,to,name,source,story,story_tags,message,message_tags,picture,link,icon,privacy,type,status_type,object_id,created_time,updated_time,"
+			. "likes.limit(1).summary(true)"
+		);
+
+		JPath::setPermissions($temp);
+
+		file_put_contents($temp, json_encode($r));
+		file_put_contents($temp . 'X.txt', print_r($r, 1));
+	}
+
+	/**
 	 * getItems
 	 *
 	 * @return  array
@@ -304,79 +338,6 @@ class FbimporterModelItems extends ListModel
 	 */
 	protected function populateState($ordering = null, $direction = 'ASC')
 	{
-		// Build ordering prefix
-		if (!$ordering)
-		{
-			$table = $this->getTable('Item');
-
-			$ordering = property_exists($table, 'ordering') ? 'item.ordering' : 'item.id';
-
-			$ordering = property_exists($table, 'catid') ? 'item.catid, ' . $ordering : $ordering;
-		}
-
 		parent::populateState($ordering, $direction);
-	}
-
-	/**
-	 * Process the query filters.
-	 *
-	 * @param JDatabaseQuery $query   The query object.
-	 * @param array          $filters The filters values.
-	 *
-	 * @return  JDatabaseQuery The db query object.
-	 */
-	protected function processFilters(\JDatabaseQuery $query, $filters = array())
-	{
-		// If no state filter, set published >= 0
-		if (!isset($filters['item.state']) && property_exists($this->getTable(), 'state'))
-		{
-			$query->where($query->quoteName('item.state') . ' >= 0');
-		}
-
-		return parent::processFilters($query, $filters);
-	}
-
-	/**
-	 * Configure the filter handlers.
-	 *
-	 * Example:
-	 * ``` php
-	 * $filterHelper->setHandler(
-	 *     'item.date',
-	 *     function($query, $field, $value)
-	 *     {
-	 *         $query->where($field . ' >= ' . $value);
-	 *     }
-	 * );
-	 * ```
-	 *
-	 * @param FilterHelper $filterHelper The filter helper object.
-	 *
-	 * @return  void
-	 */
-	protected function configureFilters($filterHelper)
-	{
-	}
-
-	/**
-	 * Configure the search handlers.
-	 *
-	 * Example:
-	 * ``` php
-	 * $searchHelper->setHandler(
-	 *     'item.title',
-	 *     function($query, $field, $value)
-	 *     {
-	 *         return $query->quoteName($field) . ' LIKE ' . $query->quote('%' . $value . '%');
-	 *     }
-	 * );
-	 * ```
-	 *
-	 * @param SearchHelper $searchHelper The search helper object.
-	 *
-	 * @return  void
-	 */
-	protected function configureSearches($searchHelper)
-	{
 	}
 }
