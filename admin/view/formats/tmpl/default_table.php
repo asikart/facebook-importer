@@ -119,13 +119,8 @@ $grid->registerTableSort();
 
 		<!--STATE-->
 		<td class="center">
-			<div class="btn-group">
-				<!-- STATE BUTTON -->
-				<?php echo $grid->state() ?>
-
-				<!-- CHANGE STATE DROP DOWN -->
-				<?php echo $this->loadTemplate('dropdown'); ?>
-			</div>
+			<!-- STATE BUTTON -->
+			<?php echo $grid->booleanIcon($item->published); ?>
 		</td>
 
 		<!--TITLE-->
@@ -136,11 +131,6 @@ $grid->registerTableSort();
 
 				<!-- Title -->
 				<?php echo $grid->editTitle(); ?>
-			</div>
-
-			<!-- Sub Title -->
-			<div class="small">
-				<?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->alias)); ?>
 			</div>
 		</td>
 

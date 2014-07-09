@@ -24,10 +24,7 @@ $container = $this->getContainer();
 $form      = $data->form;
 $item      = $data->item;
 
-// Setting tabset
-$tabs = array(
-	'tab_basic'
-)
+$fieldsets = $data->form->getFieldsets();
 ?>
 <!-- Validate Script -->
 <script type="text/javascript">
@@ -44,16 +41,17 @@ $tabs = array(
 	<form action="<?php echo JURI::getInstance(); ?>"  method="post" name="adminForm" id="adminForm"
 		class="form-validate" enctype="multipart/form-data">
 
-		<?php echo JHtmlBootstrap::startTabSet('formatEditTab', array('active' => 'tab_basic')); ?>
+		<div class="row-fluid">
+			<div class="span8">
+				<?php echo $this->loadTemplate('fieldset', array('fieldset' => $fieldsets['information'], 'class' => 'form-horizontal')); ?>
+			</div>
 
-			<?php
-			foreach ($tabs as $tab)
-			{
-				echo $this->loadTemplate($tab, array('tab' => $tab));
-			}
-			?>
+			<div class="span4">
+				<?php echo $this->loadTemplate('fieldset', array('fieldset' => $fieldsets['publish'], 'class' => 'form-horizontal')); ?>
 
-		<?php echo JHtmlBootstrap::endTabSet(); ?>
+				<?php echo $this->loadTemplate('quickinsert'); ?>
+			</div>
+		</div>
 
 		<!-- Hidden Inputs -->
 		<div id="hidden-inputs">

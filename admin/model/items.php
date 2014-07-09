@@ -71,6 +71,13 @@ class FbimporterModelItems extends ListModel
 	protected $formats;
 
 	/**
+	 * Property filterFields.
+	 *
+	 * @var  array
+	 */
+	protected $filterFields = array('import_num');
+
+	/**
 	 * Constructor
 	 *
 	 * @param   array                 $config    An array of configuration options (name, state, dbo, table_path, ignore_request).
@@ -352,5 +359,7 @@ class FbimporterModelItems extends ListModel
 	protected function populateState($ordering = null, $direction = 'ASC')
 	{
 		parent::populateState($ordering, $direction);
+
+		$this->state->set('import_num', $this->getUserStateFromRequest('import_num', 'import_num', 50));
 	}
 }

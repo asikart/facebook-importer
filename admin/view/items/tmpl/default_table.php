@@ -30,6 +30,8 @@ $date      = $container->get('date');
 
 $app = $container->get('app');
 $params = $data->params;
+
+$asset->addJs('fbimporter.js');
 ?>
 
 <fieldset id="filter-bar">
@@ -69,13 +71,7 @@ $params = $data->params;
 		<th><?php echo JText::_('COM_FBIMPORTER_FULLTEXT'); ?></th>
 	</tr>
 	</thead>
-	<tfoot>
-	<tr>
-		<td colspan="10">
-			<?php //echo $data->pagination->getListFooter(); ?>
-		</td>
-	</tr>
-	</tfoot>
+
 	<tbody>
 	<?php
 	$db = JFactory::getDbo();

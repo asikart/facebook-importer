@@ -5,6 +5,7 @@
  * @copyright  Copyright (C) 2011 - 2014 SMS Taiwan, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE
  */
+use Fbimporter\Helper\TempHelper;
 use Windwalker\Helper\DateHelper;
 
 /**
@@ -76,7 +77,7 @@ class FbimporterModelItem extends \Windwalker\Model\AbstractAdvancedModel
 		}
 		*/
 
-		$temp = \Fbimporter\Helper\TempHelper::getPath();
+		$temp = TempHelper::getPath();
 
 		$r = '';
 
@@ -162,58 +163,45 @@ class FbimporterModelItem extends \Windwalker\Model\AbstractAdvancedModel
 	/**
 	 * saveAsCombined
 	 *
-	 * @return  bool|null
+	 * @param array $items
+	 * @param array $cids
+	 *
+	 * @throws  RuntimeException
+	 * @return  boolean
 	 */
-	public function saveAsCombined()
+	public function saveAsCombined($items, $cids)
 	{
 		$params = JComponentHelper::getParams('com_fbimporter');
-		$items        = JRequest::getVar('item');
-		$cids         = JRequest::getVar('cid');
-		$format       = $this->getTable('Format');
-		$table        = JTable::getInstance('Content');
-		$sample       = JRequest::getVar('combined_sample', $params->get('combined_sample', 2));
+		$format = $this->getTable('Format');
+		$table  = JTable::getInstance('Content');
+		$sample = $this->state->get('combined.sample', $params->get('combined_sample', 2));
 		$params = JComponentHelper::getParams('com_fbimporter');
 
-		$format->load($sample);
-
-		if (!$format)
+		if (!$format->load($sample))
 		{
-			$this->setError(JText::_('COM_FBIMPORTER_CANNOT_GET_IMPORT_FORMAT'));
-
-			return false;
+			throw new \RuntimeException(JText::_('COM_FBIMPORTER_CANNOT_GET_IMPORT_FORMAT'));
 		}
 
-		$catid = JRequest::getVar('combined_catid', $params->get('combined_catid', $format->catid));
+		$catid = $this->state->get('combined.catid', $params->get('combined_catid', $format->catid));
 
 		$sample_intro = $format->introtext;
 		$sample_full  = $format->fulltext;
 
-		jimport('joomla.application.component.model');
-		if (JVERSION >= 3)
-		{
-			JModelLegacy::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models');
-			$model = JModelLegacy::getInstance('Items', 'FbimporterModel');
-		}
-		else
-		{
-			JModel::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR . '/models');
-			$model = JModel::getInstance('Items', 'FbimporterModel');
-		}
-
-		$temp = $model->temp;
+		$temp = TempHelper::getPath();
 
 		$r = '';
 
-		if (JFile::exists($temp))
-			$r = JFile::read($temp);
+		if (is_file($temp))
+		{
+			$r = file_get_contents($temp);
+		}
+
 		$r = json_decode($r);
 
 		if (isset($r->data))
 		{
-
 			foreach ($r->data as $key => &$item)
 			{
-
 				$item = new JObject($item);
 
 				$item->id = explode('_', $item->id);
@@ -229,28 +217,24 @@ class FbimporterModelItem extends \Windwalker\Model\AbstractAdvancedModel
 					$items[$item->id]['likes']   = isset($item->likes->summary->total_count) ? $item->likes->summary->total_count : 0;
 					$items[$item->id]['created'] = $item->created_time;
 				}
-
 			}
 		}
 		else
 		{
-			$this->setError(JText::_('COM_FBIMPORTER_CANNOT_GET_DATA'));
-
-			return false;
+			throw new \RuntimeException(JText::_('COM_FBIMPORTER_CANNOT_GET_DATA'));
 		}
 
 		// Sort
 		// ========================================================================
 		$ids = array();
-		$key = JRequest::getVar('combined_sort', $params->get('combined_sort', 'likes'));
+		$key = $this->state->get('combined.sort', $params->get('combined_sort', 'likes'));
 
 		foreach ($cids as $cid)
 		{
 			$ids[$cid] = $items[$cid][$key];
-
 		}
 
-		if (JRequest::getVar('combined_dir', $params->get('combined_dir', 'desc')) == 'desc')
+		if ($this->state->get('combined.dir', $params->get('combined_dir', 'desc')) == 'desc')
 		{
 			asort($ids);
 		}
@@ -260,13 +244,14 @@ class FbimporterModelItem extends \Windwalker\Model\AbstractAdvancedModel
 		}
 
 		$posts = array();
-		foreach ($ids as $cid => $id):
 
-			// get item
+		foreach ($ids as $cid => $id)
+		{
+			// Get item
 			$item = $items[$cid];
 
 			$posts[] = $this->replaceText($item, $sample_full, $cid);
-		endforeach;
+		}
 
 		// reset article
 		$table->id             = null;
@@ -285,7 +270,9 @@ class FbimporterModelItem extends \Windwalker\Model\AbstractAdvancedModel
 
 		$table->store();
 
-		return $table->id;
+		$this->state->set('content.id', $table->id);
+
+		return true;
 	}
 
 	/**
@@ -358,13 +345,13 @@ class FbimporterModelItem extends \Windwalker\Model\AbstractAdvancedModel
 		if (strpos($link, 'youtube'))
 		{
 			$platform = 'youtube';
-			$uri      = JFactory::getURI($link);
+			$uri      = JUri::getInstance($link);
 			$vid      = $uri->getVar('v');
 		}
 		elseif (strpos($link, 'vimeo'))
 		{
 			$platform = 'vimeo';
-			$uri      = JFactory::getURI($link);
+			$uri      = JUri::getInstance($link);
 			$vid      = $uri->getPath();
 			$vid      = trim($vid, '/');
 		}
@@ -389,9 +376,12 @@ class FbimporterModelItem extends \Windwalker\Model\AbstractAdvancedModel
 	 */
 	function addLink($str)
 	{
-		$str = preg_replace('#(http|https|ftp|telnet)://([0-9a-z\.\-]+)(:?[0-9]*)([0-9a-z\_\/\?\&\=\%\.\;\#\-\~\+]*)#i', '<a href="\1://\2\3\4" target="_blank" >\1://\2\3\4</a>', $str);
-
-		return $str;
+		/*
+		 * Convert URL to link.
+		 *
+		 * Code from: http://stackoverflow.com/questions/12538358#answer-12590772
+		 */
+		return preg_replace('$(https?://[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', ' <a href="$1" target="_blank">$1</a> ', $str . " ");
 	}
 }
  

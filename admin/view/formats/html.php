@@ -128,4 +128,17 @@ class FbimporterViewFormatsHtml extends GridView
 
 		return $buttonSet;
 	}
+
+	/**
+	 * setTitle
+	 *
+	 * @param string $title
+	 * @param string $icons
+	 *
+	 * @return  void
+	 */
+	protected function setTitle($title = null, $icons = 'stack article')
+	{
+		parent::setTitle(JText::_('COM_FBIMPORTER_FORMAT_SETTING'), $icons);
+	}
 }
