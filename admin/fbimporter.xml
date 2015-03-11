@@ -60,11 +60,9 @@
 		<!--<plugin>plg_system_fbimporter</plugin>-->
 	</plugins>
 
-	<!--
 	<updateservers>
-		<server type="extension" priority="1" name="Asikart Fbimporter Component">http://update.asikart.com/component/com_fbimporter.xml</server>
+		<server type="extension" priority="1" name="Asikart Facebook Importer">https://raw.githubusercontent.com/asikart/facebook-importer/staging/update.xml</server>
 	</updateservers>
-	-->
 
 </extension>
 
